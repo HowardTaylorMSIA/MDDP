@@ -1,5 +1,71 @@
 {
   "properties": {
-    "activities": []
+    "activities": [
+      {
+        "name": "Set pipelinestarttime",
+        "type": "SetVariable",
+        "dependsOn": [],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "pipelinestarttime",
+          "value": {
+            "value": "@utcnow()",
+            "type": "Expression"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "sqlsourcedatecolumn": {
+        "type": "string"
+      },
+      "sqlstartdate": {
+        "type": "string"
+      },
+      "sqlenddate": {
+        "type": "string"
+      },
+      "sqlsourceschema": {
+        "type": "string"
+      },
+      "sqlsourcetable": {
+        "type": "string"
+      },
+      "sinktablename": {
+        "type": "string"
+      },
+      "loadtype": {
+        "type": "string"
+      },
+      "sourcekeycolumn": {
+        "type": "string"
+      },
+      "batchloaddatetime": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "datepredicate": {
+        "type": "String"
+      },
+      "maxdate": {
+        "type": "String"
+      },
+      "rowsinserted": {
+        "type": "String"
+      },
+      "rowsupdated": {
+        "type": "String"
+      },
+      "pipelinestarttime": {
+        "type": "String"
+      },
+      "pipelineendtime": {
+        "type": "String"
+      }
+    }
   }
 }
