@@ -16,6 +16,29 @@
             "type": "Expression"
           }
         }
+      },
+      {
+        "name": "Set Date predicate",
+        "type": "SetVariable",
+        "dependsOn": [
+          {
+            "activity": "Set pipelinestarttime",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "secureOutput": false,
+          "secureInput": false
+        },
+        "typeProperties": {
+          "variableName": "datepredicate",
+          "value": {
+            "value": "@if(equals(pipeline().parameters.sqlenddate,null),concat(pipeline().parameters.sqlsourcedatecolumn,' >= ''', pipeline().parameters.sqlstartdate,''''),concat(pipeline().parameters.sqlsourcedatecolumn, ' >= ''',pipeline().parameters.sqlstartdate,''' and ', pipeline().parameters.sqlsourcedatecolumn,' < ''',pipeline().parameters.sqlenddate,''''))",
+            "type": "Expression"
+          }
+        }
       }
     ],
     "parameters": {
