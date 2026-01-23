@@ -2,24 +2,35 @@
   "properties": {
     "activities": [
       {
-        "name": "Set pipelinestarttime",
         "type": "SetVariable",
-        "dependsOn": [],
-        "policy": {
-          "secureOutput": false,
-          "secureInput": false
-        },
         "typeProperties": {
           "variableName": "pipelinestarttime",
           "value": {
             "value": "@utcnow()",
             "type": "Expression"
           }
-        }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set pipelinestarttime",
+        "dependsOn": []
       },
       {
-        "name": "Set Date predicate",
         "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "datepredicate",
+          "value": {
+            "value": "@if(equals(pipeline().parameters.sqlenddate,null),concat(pipeline().parameters.sqlsourcedatecolumn,' >= ''', pipeline().parameters.sqlstartdate,''''),concat(pipeline().parameters.sqlsourcedatecolumn, ' >= ''',pipeline().parameters.sqlstartdate,''' and ', pipeline().parameters.sqlsourcedatecolumn,' < ''',pipeline().parameters.sqlenddate,''''))",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Set Date predicate",
         "dependsOn": [
           {
             "activity": "Set pipelinestarttime",
@@ -27,18 +38,390 @@
               "Succeeded"
             ]
           }
-        ],
-        "policy": {
-          "secureOutput": false,
-          "secureInput": false
-        },
+        ]
+      },
+      {
+        "type": "IfCondition",
         "typeProperties": {
-          "variableName": "datepredicate",
-          "value": {
-            "value": "@if(equals(pipeline().parameters.sqlenddate,null),concat(pipeline().parameters.sqlsourcedatecolumn,' >= ''', pipeline().parameters.sqlstartdate,''''),concat(pipeline().parameters.sqlsourcedatecolumn, ' >= ''',pipeline().parameters.sqlstartdate,''' and ', pipeline().parameters.sqlsourcedatecolumn,' < ''',pipeline().parameters.sqlenddate,''''))",
+          "expression": {
+            "value": "@equals(pipeline().parameters.loadtype,'full')",
             "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "AzureSqlSource",
+                  "sqlReaderQuery": {
+                    "value": "select * from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
+                    "type": "Expression"
+                  },
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00",
+                  "datasetSettings": {
+                    "type": "AzureSqlTable",
+                    "typeProperties": {
+                      "database": "WWI"
+                    },
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "c03dc74e-8399-4616-bc17-b5319b05031c"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "applyVOrder": true,
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "table": {
+                        "value": "@pipeline().parameters.sinktablename",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "connectionSettings": {
+                      "name": "lh_fabric_demo",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "externalReferences": {
+                          "connection": "da12d4e7-41bf-42b1-81f9-e8f8732fde1d"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Copy data to delta table",
+              "dependsOn": []
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "d2a08981-bfa4-bdcf-4208-6a2be6905558",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "lakehousePath": {
+                    "value": "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d",
+                    "type": "string"
+                  },
+                  "tableName": {
+                    "value": {
+                      "value": "@pipeline().parameters.sinktablename",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "tableKey": {
+                    "value": {
+                      "value": "@pipeline().parameters.sourcekeycolumn",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  },
+                  "dateColumn": {
+                    "value": {
+                      "value": "@pipeline().parameters.sqlsourcedatecolumn",
+                      "type": "Expression"
+                    },
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Get MaxDate loaded",
+              "dependsOn": [
+                {
+                  "activity": "Copy data to delta table",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "maxdate",
+                "value": {
+                  "value": "@split(split(activity('Get MaxDate loaded').output.result.exitValue,'\\|')[0],'=')[1]",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "maxdate",
+              "dependsOn": [
+                {
+                  "activity": "Get MaxDate loaded",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "rowsinserted",
+                "value": {
+                  "value": "@split(split(activity('Get MaxDate loaded').output.result.exitValue,'\\|')[1],'=')[1]",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "set rows inserted",
+              "dependsOn": [
+                {
+                  "activity": "maxdate",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "pipelineendtime",
+                "value": "@utcnow()"
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set pipeline endtime",
+              "dependsOn": [
+                {
+                  "activity": "set rows inserted",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Copy data to delta table').output.executionDetails[0].status}', rowsread = @{activity('Copy data to delta table').output.rowsRead}, rowscopied= @{activity('Copy data to delta table').output.rowsCopied}, deltalakeinserted = '@{variables('rowsinserted')}', deltalakeupdated =0, sqlmaxdatetime = '@{variables('maxdate')}', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}'",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "connectionSettings": {
+                "name": "FabricMetadataOrchestration",
+                "properties": {
+                  "type": "FabricSqlDatabase",
+                  "typeProperties": {
+                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "externalReferences": {
+                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Update Pipeline Run details",
+              "dependsOn": [
+                {
+                  "activity": "Set pipeline endtime",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ],
+          "ifFalseActivities": [
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "AzureSqlSource",
+                  "sqlReaderQuery": "select * from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00",
+                  "datasetSettings": {
+                    "type": "AzureSqlTable",
+                    "typeProperties": {
+                      "database": "WWI"
+                    },
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "c03dc74e-8399-4616-bc17-b5319b05031c"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "ParquetSink",
+                  "formatSettings": {
+                    "type": "ParquetWriteSettings",
+                    "enableVertiParquet": true
+                  },
+                  "storeSettings": {
+                    "type": "LakehouseWriteSettings"
+                  },
+                  "datasetSettings": {
+                    "type": "Parquet",
+                    "typeProperties": {
+                      "location": {
+                        "type": "LakehouseLocation",
+                        "folderPath": {
+                          "value": "incremental/@{pipeline().parameters.sinktablename}",
+                          "type": "Expression"
+                        },
+                        "fileName": {
+                          "value": "@{pipeline().parameters.sinktablename}.parquet",
+                          "type": "Expression"
+                        }
+                      },
+                      "compressionCodec": "snappy"
+                    },
+                    "schema": [],
+                    "connectionSettings": {
+                      "name": "lh_fabric_demo",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Files"
+                        },
+                        "externalReferences": {
+                          "connection": "da12d4e7-41bf-42b1-81f9-e8f8732fde1d"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Copy data to parquet",
+              "dependsOn": []
+            },
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "38e697a9-257d-99ff-47e7-4a5ccfc28e29",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "lakehousePath": {
+                    "value": "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d",
+                    "type": "string"
+                  },
+                  "tableName": {
+                    "value": "@pipeline().parameters.sinktablename",
+                    "type": "string"
+                  },
+                  "tableKey": {
+                    "value": "@pipeline().parameters.sourcekeycolumn",
+                    "type": "string"
+                  },
+                  "dateColumn": {
+                    "value": "@pipeline().parameters.sqlsourcedatecolumn",
+                    "type": "string"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Load to Delta",
+              "dependsOn": [
+                {
+                  "activity": "Copy data to parquet",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "Check loadtype",
+        "dependsOn": [
+          {
+            "activity": "Set Date predicate",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
           }
-        }
+        ]
       }
     ],
     "parameters": {
