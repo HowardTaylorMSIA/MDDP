@@ -1,0 +1,217 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "SetVariable",
+        "typeProperties": {
+          "variableName": "batchloaddatetime",
+          "value": {
+            "value": "@pipeline().TriggerTime",
+            "type": "Expression"
+          }
+        },
+        "policy": {
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "set batch load datetime",
+        "description": "set batch load datetime ",
+        "dependsOn": []
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "FabricSqlDatabaseSource",
+            "sqlReaderQuery": {
+              "value": "select * from dbo.PipelineOrchestrator_FabricLakehouse where skipload=0 and 1=@{pipeline().parameters.loadbronze}",
+              "type": "Expression"
+            },
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "FabricSqlDatabaseTable",
+            "schema": [],
+            "connectionSettings": {
+              "name": "FabricMetadataOrchestration",
+              "properties": {
+                "type": "FabricSqlDatabase",
+                "typeProperties": {
+                  "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000"
+                },
+                "externalReferences": {
+                  "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get tables to load to deltalake",
+        "dependsOn": [
+          {
+            "activity": "set batch load datetime",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Get tables to load to deltalake').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "sqlsourcedatecolumn": {
+                    "value": "@item().sqlsourcedatecolumn",
+                    "type": "Expression"
+                  },
+                  "sqlstartdate": {
+                    "value": "@item().sqlstartdate",
+                    "type": "Expression"
+                  },
+                  "sqlenddate": {
+                    "value": "@item().sqlenddate",
+                    "type": "Expression"
+                  },
+                  "sqlsourceschema": {
+                    "value": "@item().sqlsourceschema",
+                    "type": "Expression"
+                  },
+                  "sqlsourcetable": {
+                    "value": "@item().sqlsourcetable",
+                    "type": "Expression"
+                  },
+                  "sinktablename": {
+                    "value": "@item().sinktablename",
+                    "type": "Expression"
+                  },
+                  "loadtype": {
+                    "value": "@item().loadtype",
+                    "type": "Expression"
+                  },
+                  "sourcekeycolumn": {
+                    "value": "@item().sourcekeycolumn",
+                    "type": "Expression"
+                  },
+                  "batchloaddatetime": {
+                    "value": "@variables('batchloaddatetime')",
+                    "type": "Expression"
+                  }
+                },
+                "waitOnCompletion": true,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "cbf57c35-4596-ae92-4ee4-60caf75564dc",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "f6a2569f-14e5-49bb-83f5-20dc22d86b49"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Get WWImporters Data",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "For each table to load to deltalake",
+        "dependsOn": [
+          {
+            "activity": "Get tables to load to deltalake",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "76f9c506-fc86-b642-407e-31a1c5c62b06",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "startyear": {
+              "value": "@pipeline().parameters.startyear",
+              "type": "int"
+            },
+            "endyear": {
+              "value": "@pipeline().parameters.endyear",
+              "type": "int"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Notebook1",
+        "dependsOn": [
+          {
+            "activity": "For each table to load to deltalake",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ],
+    "parameters": {
+      "startyear": {
+        "type": "int",
+        "defaultValue": 2013
+      },
+      "endyear": {
+        "type": "int",
+        "defaultValue": 2025
+      },
+      "loaddwh": {
+        "type": "int",
+        "defaultValue": 0
+      },
+      "loadgoldlh": {
+        "type": "int",
+        "defaultValue": 1
+      },
+      "loadbronze": {
+        "type": "int",
+        "defaultValue": 1
+      },
+      "waittime": {
+        "type": "int",
+        "defaultValue": 300
+      }
+    },
+    "variables": {
+      "batchloaddatetime": {
+        "type": "String"
+      }
+    },
+    "concurrency": 4
+  }
+}

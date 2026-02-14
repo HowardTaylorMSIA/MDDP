@@ -223,7 +223,10 @@
               "type": "SetVariable",
               "typeProperties": {
                 "variableName": "pipelineendtime",
-                "value": "@utcnow()"
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
               },
               "policy": {
                 "secureInput": false,
@@ -291,7 +294,10 @@
               "typeProperties": {
                 "source": {
                   "type": "AzureSqlSource",
-                  "sqlReaderQuery": "select * from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
+                  "sqlReaderQuery": {
+                    "value": "select * from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
+                    "type": "Expression"
+                  },
                   "partitionOption": "None",
                   "queryTimeout": "02:00:00",
                   "datasetSettings": {
@@ -381,15 +387,24 @@
                     "type": "string"
                   },
                   "tableName": {
-                    "value": "@pipeline().parameters.sinktablename",
+                    "value": {
+                      "value": "@pipeline().parameters.sinktablename",
+                      "type": "Expression"
+                    },
                     "type": "string"
                   },
                   "tableKey": {
-                    "value": "@pipeline().parameters.sourcekeycolumn",
+                    "value": {
+                      "value": "@pipeline().parameters.sourcekeycolumn",
+                      "type": "Expression"
+                    },
                     "type": "string"
                   },
                   "dateColumn": {
-                    "value": "@pipeline().parameters.sqlsourcedatecolumn",
+                    "value": {
+                      "value": "@pipeline().parameters.sqlsourcedatecolumn",
+                      "type": "Expression"
+                    },
                     "type": "string"
                   }
                 }
@@ -405,6 +420,143 @@
               "dependsOn": [
                 {
                   "activity": "Copy data to parquet",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "maxdate",
+                "value": {
+                  "value": "@split(split(activity('Load to Delta').output.result.exitValue,'\\|')[0],'=')[1]",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Get maxdate incr",
+              "dependsOn": [
+                {
+                  "activity": "Load to Delta",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "rowsinserted",
+                "value": {
+                  "value": "@split(split(activity('Load to Delta').output.result.exitValue,'\\|')[1],'=')[1]",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "set rows inserted incr",
+              "dependsOn": [
+                {
+                  "activity": "Get maxdate incr",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "rowsupdated",
+                "value": {
+                  "value": "@split(split(activity('Load to Delta').output.result.exitValue,'\\|')[2],'=')[1]",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "set rows updated incr",
+              "dependsOn": [
+                {
+                  "activity": "set rows inserted incr",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "pipelineendtime",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set pipeline endtime incr",
+              "dependsOn": [
+                {
+                  "activity": "set rows updated incr",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Copy data to parquet').output.executionDetails[0].status}', rowsread = @{activity('Copy data to parquet').output.rowsRead}, rowscopied= @{activity('Copy data to parquet').output.rowsCopied},deltalakeinserted = '@{variables('rowsinserted')}',deltalakeupdated = '@{variables('rowsupdated')}', sqlmaxdatetime = '@{variables('maxdate')}', sqlstartdate = '@{variables('maxdate')}', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}'  where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}'",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "connectionSettings": {
+                "name": "FabricMetadataOrchestration",
+                "properties": {
+                  "type": "FabricSqlDatabase",
+                  "typeProperties": {
+                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "externalReferences": {
+                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Update Pipeline Run details - incremental",
+              "dependsOn": [
+                {
+                  "activity": "Set pipeline endtime incr",
                   "dependencyConditions": [
                     "Succeeded"
                   ]

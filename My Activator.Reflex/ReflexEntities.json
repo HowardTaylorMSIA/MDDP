@@ -1,0 +1,70 @@
+[
+  {
+    "uniqueIdentifier": "e486a1c8-6b07-48b8-b4ca-a64ac8d6477d",
+    "payload": {
+      "name": "mddpfabric",
+      "description": "Container Description",
+      "type": "rthSubscriptions"
+    },
+    "type": "container-v1"
+  },
+  {
+    "uniqueIdentifier": "d709a324-ca1d-4bf5-b0ec-be99e862efcb",
+    "payload": {
+      "name": "mddpfabric event",
+      "connection": {
+        "scope": "Capacity",
+        "tenantId": "ee424a5e-2c69-4c1d-a40d-9ba432fceca8",
+        "capacityId": "4dd56b57-1443-4900-b131-4d45a9bede39",
+        "eventGroupType": "Microsoft.Fabric.CapacityEvents"
+      },
+      "filterSettings": {
+        "eventTypes": [
+          {
+            "name": "Microsoft.Fabric.Capacity.State"
+          },
+          {
+            "name": "Microsoft.Fabric.Capacity.Summary"
+          }
+        ],
+        "filters": []
+      },
+      "parentContainer": {
+        "targetUniqueIdentifier": "e486a1c8-6b07-48b8-b4ca-a64ac8d6477d"
+      }
+    },
+    "type": "realTimeHubSource-v1"
+  },
+  {
+    "uniqueIdentifier": "95a3ff3e-e365-4967-a00c-4df34e5ff1ee",
+    "payload": {
+      "name": "mddpfabric event",
+      "parentContainer": {
+        "targetUniqueIdentifier": "e486a1c8-6b07-48b8-b4ca-a64ac8d6477d"
+      },
+      "definition": {
+        "type": "Event",
+        "instance": "{\"steps\":[{\"id\":\"df40dae7-d408-477c-9ef7-0c6924cbb7f0\",\"name\":\"SourceEventStep\",\"rows\":[{\"arguments\":[{\"name\":\"entityId\",\"type\":\"string\",\"value\":\"d709a324-ca1d-4bf5-b0ec-be99e862efcb\"}],\"kind\":\"SourceReference\",\"name\":\"SourceSelector\"}]}],\"templateId\":\"SourceEvent\",\"templateVersion\":\"1.2.3\"}"
+      }
+    },
+    "type": "timeSeriesView-v1"
+  },
+  {
+    "uniqueIdentifier": "70a709ed-f313-49ee-a833-2848f6b6adef",
+    "payload": {
+      "name": "Capacity Overview Events",
+      "parentContainer": {
+        "targetUniqueIdentifier": "e486a1c8-6b07-48b8-b4ca-a64ac8d6477d"
+      },
+      "definition": {
+        "type": "Rule",
+        "instance": "{\"steps\":[{\"id\":\"a5076824-e74b-41cd-b399-0f500d51522f\",\"name\":\"FieldsDefaultsStep\",\"rows\":[{\"arguments\":[{\"arguments\":[{\"name\":\"entityId\",\"type\":\"string\",\"value\":\"95a3ff3e-e365-4967-a00c-4df34e5ff1ee\"}],\"kind\":\"EventReference\",\"name\":\"event\",\"type\":\"complex\"}],\"kind\":\"Event\",\"name\":\"EventSelector\"}]},{\"id\":\"da0cf7d2-6fd9-4484-9501-30ce7190131a\",\"name\":\"EventDetectStep\",\"rows\":[{\"arguments\":[],\"kind\":\"OnEveryValue\",\"name\":\"OnEveryValue\"}]},{\"id\":\"0b083f76-ce12-4922-98f4-b4bada9baa7a\",\"name\":\"ActStep\",\"rows\":[{\"kind\":\"TeamsMessage\",\"name\":\"TeamsBinding\",\"arguments\":[{\"name\":\"messageLocale\",\"type\":\"string\",\"value\":\"en-us\"},{\"name\":\"recipients\",\"type\":\"array\",\"values\":[{\"type\":\"string\",\"value\":\"howardtaylor@MngEnvMCAP327828.onmicrosoft.com\"}]},{\"name\":\"headline\",\"type\":\"array\",\"values\":[{\"type\":\"string\",\"value\":\"Activator alert\"}]},{\"name\":\"optionalMessage\",\"type\":\"array\",\"values\":[{\"type\":\"string\",\"value\":\"The condition has been met\"}]},{\"name\":\"additionalInformation\",\"type\":\"array\",\"values\":[{\"arguments\":[{\"name\":\"name\",\"type\":\"string\",\"value\":\"capacityId\"},{\"arguments\":[{\"name\":\"fieldName\",\"type\":\"string\",\"value\":\"capacityId\"}],\"kind\":\"EventFieldReference\",\"name\":\"reference\",\"type\":\"complexReference\"}],\"kind\":\"NameReferencePair\",\"type\":\"complex\"},{\"arguments\":[{\"name\":\"name\",\"type\":\"string\",\"value\":\"capacityName\"},{\"arguments\":[{\"name\":\"fieldName\",\"type\":\"string\",\"value\":\"capacityName\"}],\"kind\":\"EventFieldReference\",\"name\":\"reference\",\"type\":\"complexReference\"}],\"kind\":\"NameReferencePair\",\"type\":\"complex\"},{\"arguments\":[{\"name\":\"name\",\"type\":\"string\",\"value\":\"capacitySku\"},{\"arguments\":[{\"name\":\"fieldName\",\"type\":\"string\",\"value\":\"capacitySku\"}],\"kind\":\"EventFieldReference\",\"name\":\"reference\",\"type\":\"complexReference\"}],\"kind\":\"NameReferencePair\",\"type\":\"complex\"},{\"arguments\":[{\"name\":\"name\",\"type\":\"string\",\"value\":\"transitionTime\"},{\"arguments\":[{\"name\":\"fieldName\",\"type\":\"string\",\"value\":\"transitionTime\"}],\"kind\":\"EventFieldReference\",\"name\":\"reference\",\"type\":\"complexReference\"}],\"kind\":\"NameReferencePair\",\"type\":\"complex\"},{\"arguments\":[{\"name\":\"name\",\"type\":\"string\",\"value\":\"capacityState\"},{\"arguments\":[{\"name\":\"fieldName\",\"type\":\"string\",\"value\":\"capacityState\"}],\"kind\":\"EventFieldReference\",\"name\":\"reference\",\"type\":\"complexReference\"}],\"kind\":\"NameReferencePair\",\"type\":\"complex\"}]}]}]}],\"templateId\":\"EventTrigger\",\"templateVersion\":\"1.2.3\"}",
+        "settings": {
+          "shouldRun": true,
+          "shouldApplyRuleOnUpdate": true
+        }
+      }
+    },
+    "type": "timeSeriesView-v1"
+  }
+]

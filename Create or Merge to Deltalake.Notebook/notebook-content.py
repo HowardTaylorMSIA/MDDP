@@ -24,6 +24,13 @@
 from delta.tables import *
 from pyspark.sql.functions import *
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # PARAMETERS CELL ********************
 
 lakehousePath = "abfss://85bfc254-9abf-46cc-b1fe-943ec35b3460@msit-onelake.dfs.fabric.microsoft.com/c02dea28-20ca-432b-b6e8-39d0be76f540"
@@ -32,21 +39,49 @@ tableKey = "InvoiceID"
 tableKey2 = None
 dateColumn = "LastEditedWhen"
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 # deltaTablePath = f"{lakehousePath}/Tables/{tableName}" 
 deltaTablePath = f"{lakehousePath}/Tables/{tableName}" 
 # print(deltaTablePath)
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 parquetFilePath = f"{lakehousePath}/Files/incremental/{tableName}/{tableName}.parquet"
 # print(parquetFilePath)
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 df2 = spark.read.parquet(parquetFilePath)
 # display(df2)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # CELL ********************
 
@@ -54,6 +89,13 @@ if tableKey2 is None:
     mergeKeyExpr = f"t.{tableKey} = s.{tableKey}"
 else:
     mergeKeyExpr = f"t.{tableKey} = s.{tableKey} AND t.{tableKey2} = s.{tableKey2}"    
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # MARKDOWN ********************
 
@@ -78,6 +120,13 @@ else:
     numInserted = operationMetrics["numOutputRows"]
     numUpdated = 0
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # MARKDOWN ********************
 
 # Get the latest date loaded into the table - this will be used for watermarking; return the max date, the number of rows inserted and number updated
@@ -90,11 +139,25 @@ maxdate = df3.agg(max(dateColumn)).collect()[0][0]
 # print(maxdate)
 maxdate_str = maxdate.strftime("%Y-%m-%d %H:%M:%S")
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 result = "maxdate="+maxdate_str +  "|numInserted="+str(numInserted)+  "|numUpdated="+str(numUpdated)
 # result = {"maxdate": maxdate_str, "numInserted": numInserted, "numUpdated": numUpdated}
 mssparkutils.notebook.exit(str(result))
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # MARKDOWN ********************
 
