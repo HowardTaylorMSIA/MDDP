@@ -71,6 +71,8 @@
       {
         "type": "ForEach",
         "typeProperties": {
+          "isSequential": false,
+          "batchCount": 2,
           "items": {
             "value": "@activity('Get tables to load to deltalake').output.value",
             "type": "Expression"
