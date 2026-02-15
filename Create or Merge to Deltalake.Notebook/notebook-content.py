@@ -116,6 +116,7 @@ if DeltaTable.isDeltaTable(spark,deltaTablePath):
 else:
     df2.write.format("delta").save(deltaTablePath)  
     deltaTable = DeltaTable.forPath(spark,deltaTablePath)
+    history = deltaTable.history(1).select("operationMetrics")
     operationMetrics = history.collect()[0]["operationMetrics"]
     numInserted = operationMetrics["numOutputRows"]
     numUpdated = 0
