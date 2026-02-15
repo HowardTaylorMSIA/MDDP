@@ -62,19 +62,24 @@ deltaTablePath = f"{lakehousePath}/Tables/{tableName}" #fill in your delta table
 
 # CELL ********************
 
-if mssparkutils.fs.exists(deltaTablePath):
-    df = spark.read.format("delta").load(deltaTablePath)
-    rowcount = df.count()
-    if rowcount > 0:
-        maxdate = df.agg(max(dateColumn)).collect()[0][0]
-        if maxdate is not None:
-            maxdate_str = maxdate.strftime("%Y-%m-%d %H:%M:%S")
+try:
+    if mssparkutils.fs.exists(deltaTablePath):
+        df = spark.read.format("delta").load(deltaTablePath)
+        rowcount = df.count()
+        if rowcount > 0:
+            maxdate = df.agg(max(dateColumn)).collect()[0][0]
+            if maxdate is not None and hasattr(maxdate, 'strftime'):
+                maxdate_str = maxdate.strftime("%Y-%m-%d %H:%M:%S")
+            elif maxdate is not None:
+                maxdate_str = str(maxdate)
+            else:
+                maxdate_str = "1900-01-01 00:00:00"
         else:
             maxdate_str = "1900-01-01 00:00:00"
+        result = "maxdate=" + maxdate_str + "|rowcount=" + str(rowcount)
     else:
-        maxdate_str = "1900-01-01 00:00:00"
-    result = "maxdate=" + maxdate_str + "|rowcount=" + str(rowcount)
-else:
+        result = "maxdate=1900-01-01 00:00:00|rowcount=0"
+except Exception as e:
     result = "maxdate=1900-01-01 00:00:00|rowcount=0"
 
 mssparkutils.notebook.exit(result)
