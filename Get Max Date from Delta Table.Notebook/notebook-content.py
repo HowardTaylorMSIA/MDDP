@@ -62,12 +62,15 @@ deltaTablePath = f"{lakehousePath}/Tables/{tableName}" #fill in your delta table
 
 # CELL ********************
 
-df = spark.read.format("delta").load(deltaTablePath)
-maxdate = df.agg(max(dateColumn)).collect()[0][0]
-rowcount = df.count()
-# print(maxdate)
-maxdate_str = maxdate.strftime("%Y-%m-%d %H:%M:%S")
-result = "maxdate="+maxdate_str +  "|rowcount="+str(rowcount)
+if mssparkutils.fs.exists(deltaTablePath):
+    df = spark.read.format("delta").load(deltaTablePath)
+    maxdate = df.agg(max(dateColumn)).collect()[0][0]
+    rowcount = df.count()
+    maxdate_str = maxdate.strftime("%Y-%m-%d %H:%M:%S")
+    result = "maxdate="+maxdate_str +  "|rowcount="+str(rowcount)
+else:
+    result = "maxdate=1900-01-01 00:00:00|rowcount=0"
+
 mssparkutils.notebook.exit(result)
 
 # METADATA ********************

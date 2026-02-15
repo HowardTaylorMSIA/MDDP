@@ -2,6 +2,7 @@ CREATE TABLE [dbo].[PipelineOrchestrator_FabricLakehouse] (
     [pipelinename]        NVARCHAR (100) NOT NULL,
     [sqlsourceschema]     NVARCHAR (50)  NOT NULL,
     [sqlsourcetable]      NVARCHAR (50)  NOT NULL,
+    [sourcecolumns]       NVARCHAR (MAX)  NULL,
     [sqlsourcedatecolumn] NVARCHAR (50)  NULL,
     [sourcekeycolumn]     NVARCHAR (50)  NULL,
     [sqlstartdate]        SMALLDATETIME  NULL,

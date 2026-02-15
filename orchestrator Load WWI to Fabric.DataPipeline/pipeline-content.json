@@ -114,6 +114,10 @@
                     "value": "@item().sourcekeycolumn",
                     "type": "Expression"
                   },
+                  "sourcecolumns": {
+                    "value": "@if(equals(item().sourcecolumns,null),'*',item().sourcecolumns)",
+                    "type": "Expression"
+                  },
                   "batchloaddatetime": {
                     "value": "@variables('batchloaddatetime')",
                     "type": "Expression"

@@ -54,7 +54,7 @@
                 "source": {
                   "type": "AzureSqlSource",
                   "sqlReaderQuery": {
-                    "value": "select * from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
+                    "value": "select @{pipeline().parameters.sourcecolumns} from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
                     "type": "Expression"
                   },
                   "partitionOption": "None",
@@ -295,7 +295,7 @@
                 "source": {
                   "type": "AzureSqlSource",
                   "sqlReaderQuery": {
-                    "value": "select * from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
+                    "value": "select @{pipeline().parameters.sourcecolumns} from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
                     "type": "Expression"
                   },
                   "partitionOption": "None",
@@ -600,6 +600,10 @@
       },
       "sourcekeycolumn": {
         "type": "string"
+      },
+      "sourcecolumns": {
+        "type": "string",
+        "defaultValue": "*"
       },
       "batchloaddatetime": {
         "type": "string"
