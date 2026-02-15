@@ -8,11 +8,12 @@
 # META   },
 # META   "dependencies": {
 # META     "lakehouse": {
-# META       "default_lakehouse_name": "",
-# META       "default_lakehouse_workspace_id": "",
+# META       "default_lakehouse": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
+# META       "default_lakehouse_name": "lh_fabric_demo",
+# META       "default_lakehouse_workspace_id": "00000000-0000-0000-0000-000000000000",
 # META       "known_lakehouses": [
 # META         {
-# META           "id": "c02dea28-20ca-432b-b6e8-39d0be76f540"
+# META           "id": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1"
 # META         }
 # META       ]
 # META     }
@@ -114,7 +115,7 @@ if DeltaTable.isDeltaTable(spark,deltaTablePath):
     numInserted = operationMetrics["numTargetRowsInserted"]
     numUpdated = operationMetrics["numTargetRowsUpdated"]
 else:
-    df2.write.format("delta").mode("overwrite").save(deltaTablePath)
+    df2.write.format("delta").mode("overwrite").saveAsTable(tableName)
     numInserted = df2.count()
     numUpdated = 0
 
