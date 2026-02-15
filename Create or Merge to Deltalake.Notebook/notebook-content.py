@@ -104,7 +104,7 @@ else:
 
 # CELL ********************
 
-if DeltaTable.isDeltaTable(spark,deltaTablePath):
+if mssparkutils.fs.exists(deltaTablePath) and DeltaTable.isDeltaTable(spark,deltaTablePath):
     deltaTable = DeltaTable.forPath(spark,deltaTablePath)
     deltaTable.alias("t").merge(
         df2.alias("s"),
@@ -133,10 +133,18 @@ else:
 # CELL ********************
 
 deltaTablePath = f"{lakehousePath}/Tables/{tableName}"
-df3 = spark.read.format("delta").load(deltaTablePath)
+if mssparkutils.fs.exists(deltaTablePath):
+    df3 = spark.read.format("delta").load(deltaTablePath)
+else:
+    df3 = spark.table(tableName)
 maxdate = df3.agg(max(dateColumn)).collect()[0][0]
 # print(maxdate)
-maxdate_str = maxdate.strftime("%Y-%m-%d %H:%M:%S")
+if maxdate is not None and hasattr(maxdate, 'strftime'):
+    maxdate_str = maxdate.strftime("%Y-%m-%d %H:%M:%S")
+elif maxdate is not None:
+    maxdate_str = str(maxdate)
+else:
+    maxdate_str = "1900-01-01 00:00:00"
 
 # METADATA ********************
 
