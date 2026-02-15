@@ -178,7 +178,7 @@
               "typeProperties": {
                 "variableName": "maxdate",
                 "value": {
-                  "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'rowcount='),split(split(activity('Get MaxDate loaded').output.result.exitValue,'\\|')[0],'=')[1],'1900-01-01 00:00:00')",
+                  "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'rowcount='),split(split(activity('Get MaxDate loaded').output.result.exitValue,';;')[0],'=')[1],'1900-01-01 00:00:00')",
                   "type": "Expression"
                 }
               },
@@ -201,7 +201,7 @@
               "typeProperties": {
                 "variableName": "rowsinserted",
                 "value": {
-                  "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'rowcount='),split(split(activity('Get MaxDate loaded').output.result.exitValue,'\\|')[1],'=')[1],'0')",
+                  "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'rowcount='),split(split(activity('Get MaxDate loaded').output.result.exitValue,';;')[1],'=')[1],'0')",
                   "type": "Expression"
                 }
               },
@@ -431,7 +431,7 @@
               "typeProperties": {
                 "variableName": "maxdate",
                 "value": {
-                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'rowcount='),split(split(activity('Load to Delta').output.result.exitValue,'\\|')[0],'=')[1],'1900-01-01 00:00:00')",
+                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'numInserted='),split(split(activity('Load to Delta').output.result.exitValue,';;')[0],'=')[1],'1900-01-01 00:00:00')",
                   "type": "Expression"
                 }
               },
@@ -454,7 +454,7 @@
               "typeProperties": {
                 "variableName": "rowsinserted",
                 "value": {
-                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'rowcount='),split(split(activity('Load to Delta').output.result.exitValue,'\\|')[1],'=')[1],'0')",
+                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'numInserted='),split(split(activity('Load to Delta').output.result.exitValue,';;')[1],'=')[1],'0')",
                   "type": "Expression"
                 }
               },
@@ -477,7 +477,7 @@
               "typeProperties": {
                 "variableName": "rowsupdated",
                 "value": {
-                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'rowcount='),split(split(activity('Load to Delta').output.result.exitValue,'\\|')[2],'=')[1],'0')",
+                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'numUpdated='),split(split(activity('Load to Delta').output.result.exitValue,';;')[2],'=')[1],'0')",
                   "type": "Expression"
                 }
               },

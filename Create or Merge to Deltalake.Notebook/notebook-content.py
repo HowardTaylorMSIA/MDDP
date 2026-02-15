@@ -148,7 +148,7 @@ maxdate_str = maxdate.strftime("%Y-%m-%d %H:%M:%S")
 
 # CELL ********************
 
-result = "maxdate="+maxdate_str +  "|numInserted="+str(numInserted)+  "|numUpdated="+str(numUpdated)
+result = "maxdate="+maxdate_str +  ";;numInserted="+str(numInserted)+  ";;numUpdated="+str(numUpdated)
 # result = {"maxdate": maxdate_str, "numInserted": numInserted, "numUpdated": numUpdated}
 mssparkutils.notebook.exit(str(result))
 

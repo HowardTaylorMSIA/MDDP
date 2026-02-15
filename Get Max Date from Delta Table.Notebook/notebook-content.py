@@ -76,11 +76,11 @@ try:
                 maxdate_str = "1900-01-01 00:00:00"
         else:
             maxdate_str = "1900-01-01 00:00:00"
-        result = "maxdate=" + maxdate_str + "|rowcount=" + str(rowcount)
+        result = "maxdate=" + maxdate_str + ";;rowcount=" + str(rowcount)
     else:
-        result = "maxdate=1900-01-01 00:00:00|rowcount=0"
+        result = "maxdate=1900-01-01 00:00:00;;rowcount=0"
 except Exception as e:
-    result = "maxdate=1900-01-01 00:00:00|rowcount=0"
+    result = "maxdate=1900-01-01 00:00:00;;rowcount=0"
 
 mssparkutils.notebook.exit(result)
 
