@@ -160,11 +160,17 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "startyear": {
-              "value": "@pipeline().parameters.startyear",
+              "value": {
+                "value": "@pipeline().parameters.startyear",
+                "type": "Expression"
+              },
               "type": "int"
             },
             "endyear": {
-              "value": "@pipeline().parameters.endyear",
+              "value": {
+                "value": "@pipeline().parameters.endyear",
+                "type": "Expression"
+              },
               "type": "int"
             }
           }
@@ -176,7 +182,7 @@
           "secureInput": false,
           "secureOutput": false
         },
-        "name": "Notebook1",
+        "name": "uild Calendar",
         "dependsOn": [
           {
             "activity": "For each table to load to deltalake",
