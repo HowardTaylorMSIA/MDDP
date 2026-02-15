@@ -115,7 +115,7 @@ if mssparkutils.fs.exists(deltaTablePath) and DeltaTable.isDeltaTable(spark,delt
     numInserted = operationMetrics["numTargetRowsInserted"]
     numUpdated = operationMetrics["numTargetRowsUpdated"]
 else:
-    df2.write.format("delta").mode("overwrite").save(deltaTablePath)
+    df2.write.format("delta").mode("overwrite").saveAsTable(tableName)
     numInserted = df2.count()
     numUpdated = 0
 

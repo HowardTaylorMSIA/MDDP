@@ -118,7 +118,7 @@ calendardf = dates.select(
 
 # CELL ********************
 
-calendardf.write.format("delta").mode("overwrite").save(deltaTablePath)
+calendardf.write.format("delta").mode("overwrite").saveAsTable("Calendar")
 
 # METADATA ********************
 
