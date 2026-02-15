@@ -182,7 +182,7 @@
           "secureInput": false,
           "secureOutput": false
         },
-        "name": "uild Calendar",
+        "name": "Build Calendar",
         "dependsOn": [
           {
             "activity": "For each table to load to deltalake",
