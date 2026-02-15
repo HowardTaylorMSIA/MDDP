@@ -49,7 +49,7 @@ endyear = 2025
 
 # CELL ********************
 
-lakehousePath = "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d/Files"
+lakehousePath = "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d"
 deltaTablePath = f"{lakehousePath}/Tables/Calendar" 
 
 # METADATA ********************
@@ -117,7 +117,7 @@ calendardf = dates.select(
 
 # CELL ********************
 
-calendardf.write.format("delta").mode("overwrite").save(deltaTablePath)
+calendardf.write.format("delta").mode("overwrite").saveAsTable("Calendar")
 
 # METADATA ********************
 
