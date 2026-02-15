@@ -91,7 +91,7 @@
                         "type": "Lakehouse",
                         "typeProperties": {
                           "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
-                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12",
                           "rootFolder": "Tables"
                         },
                         "externalReferences": {
@@ -127,7 +127,7 @@
               "type": "TridentNotebook",
               "typeProperties": {
                 "notebookId": "d2a08981-bfa4-bdcf-4208-6a2be6905558",
-                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12",
                 "parameters": {
                   "lakehousePath": {
                     "value": "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d",
@@ -262,7 +262,7 @@
                   "type": "FabricSqlDatabase",
                   "typeProperties": {
                     "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                    "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
                   },
                   "externalReferences": {
                     "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
@@ -344,7 +344,7 @@
                         "type": "Lakehouse",
                         "typeProperties": {
                           "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
-                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12",
                           "rootFolder": "Files"
                         },
                         "externalReferences": {
@@ -380,7 +380,7 @@
               "type": "TridentNotebook",
               "typeProperties": {
                 "notebookId": "38e697a9-257d-99ff-47e7-4a5ccfc28e29",
-                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12",
                 "parameters": {
                   "lakehousePath": {
                     "value": "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d",
@@ -538,7 +538,7 @@
                   "type": "FabricSqlDatabase",
                   "typeProperties": {
                     "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                    "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
                   },
                   "externalReferences": {
                     "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"

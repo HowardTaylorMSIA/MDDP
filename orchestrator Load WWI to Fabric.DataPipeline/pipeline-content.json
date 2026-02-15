@@ -39,7 +39,7 @@
                 "type": "FabricSqlDatabase",
                 "typeProperties": {
                   "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
-                  "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
                 },
                 "externalReferences": {
                   "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
@@ -124,7 +124,7 @@
                   }
                 },
                 "waitOnCompletion": true,
-                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12",
                 "pipelineId": "cbf57c35-4596-ae92-4ee4-60caf75564dc",
                 "operationType": "InvokeFabricPipeline"
               },
@@ -157,7 +157,7 @@
         "type": "TridentNotebook",
         "typeProperties": {
           "notebookId": "76f9c506-fc86-b642-407e-31a1c5c62b06",
-          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12",
           "parameters": {
             "startyear": {
               "value": "@pipeline().parameters.startyear",
