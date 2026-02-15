@@ -178,7 +178,7 @@
               "typeProperties": {
                 "variableName": "maxdate",
                 "value": {
-                  "value": "@split(split(activity('Get MaxDate loaded').output.result.exitValue,'\\|')[0],'=')[1]",
+                  "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'|'),split(split(activity('Get MaxDate loaded').output.result.exitValue,'\\|')[0],'=')[1],'1900-01-01 00:00:00')",
                   "type": "Expression"
                 }
               },
@@ -201,7 +201,7 @@
               "typeProperties": {
                 "variableName": "rowsinserted",
                 "value": {
-                  "value": "@split(split(activity('Get MaxDate loaded').output.result.exitValue,'\\|')[1],'=')[1]",
+                  "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'|'),split(split(activity('Get MaxDate loaded').output.result.exitValue,'\\|')[1],'=')[1],'0')",
                   "type": "Expression"
                 }
               },
@@ -431,7 +431,7 @@
               "typeProperties": {
                 "variableName": "maxdate",
                 "value": {
-                  "value": "@split(split(activity('Load to Delta').output.result.exitValue,'\\|')[0],'=')[1]",
+                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'|'),split(split(activity('Load to Delta').output.result.exitValue,'\\|')[0],'=')[1],'1900-01-01 00:00:00')",
                   "type": "Expression"
                 }
               },
@@ -454,7 +454,7 @@
               "typeProperties": {
                 "variableName": "rowsinserted",
                 "value": {
-                  "value": "@split(split(activity('Load to Delta').output.result.exitValue,'\\|')[1],'=')[1]",
+                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'|'),split(split(activity('Load to Delta').output.result.exitValue,'\\|')[1],'=')[1],'0')",
                   "type": "Expression"
                 }
               },
@@ -477,7 +477,7 @@
               "typeProperties": {
                 "variableName": "rowsupdated",
                 "value": {
-                  "value": "@split(split(activity('Load to Delta').output.result.exitValue,'\\|')[2],'=')[1]",
+                  "value": "@if(contains(activity('Load to Delta').output.result.exitValue,'|'),split(split(activity('Load to Delta').output.result.exitValue,'\\|')[2],'=')[1],'0')",
                   "type": "Expression"
                 }
               },
