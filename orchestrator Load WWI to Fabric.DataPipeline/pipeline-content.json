@@ -268,7 +268,7 @@
                   "storedprocschema": "@item().storedprocschema",
                   "storedprocname": "@item().storedprocname"
                 },
-                "waitOnCompletion": false,
+                "waitOnCompletion": true,
                 "workspaceId": "00000000-0000-0000-0000-000000000000",
                 "pipelineId": "f51982d9-6ea4-a180-41e4-a856c8a3a328",
                 "operationType": "InvokeFabricPipeline"

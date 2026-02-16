@@ -29,19 +29,15 @@
               "type": "Copy",
               "typeProperties": {
                 "source": {
-                  "type": "LakehouseTableSource",
+                  "type": "DataWarehouseSource",
+                  "sqlReaderQuery": {
+                    "value": "SELECT * FROM @{pipeline().parameters.sourceschema}.@{pipeline().parameters.sourcetable}",
+                    "type": "Expression"
+                  },
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00",
                   "datasetSettings": {
-                    "type": "LakehouseTable",
-                    "typeProperties": {
-                      "schema": {
-                        "value": "@pipeline().parameters.sourceschema",
-                        "type": "Expression"
-                      },
-                      "table": {
-                        "value": "@pipeline().parameters.sourcetable",
-                        "type": "Expression"
-                      }
-                    },
+                    "type": "DataWarehouseTable",
                     "schema": [],
                     "connectionSettings": {
                       "name": "lh_fabric_demo",
@@ -49,8 +45,7 @@
                         "type": "Lakehouse",
                         "typeProperties": {
                           "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
-                          "workspaceId": "00000000-0000-0000-0000-000000000000",
-                          "rootFolder": "Tables"
+                          "workspaceId": "00000000-0000-0000-0000-000000000000"
                         },
                         "externalReferences": {
                           "connection": "da12d4e7-41bf-42b1-81f9-e8f8732fde1d"
