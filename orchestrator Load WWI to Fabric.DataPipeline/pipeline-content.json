@@ -319,11 +319,15 @@
       },
       "endyear": {
         "type": "int",
-        "defaultValue": 2027
+        "defaultValue": 2025
       },
       "loaddwh": {
         "type": "int",
         "defaultValue": 0
+      },
+      "loadgoldlh": {
+        "type": "int",
+        "defaultValue": 1
       },
       "loadbronze": {
         "type": "int",

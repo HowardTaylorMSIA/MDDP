@@ -1,6 +1,6 @@
 CREATE TABLE [Gold].[Calendar] (
 
-	[Date] date NOT NULL, 
+	[Date] date NULL, 
 	[DayNum] smallint NULL, 
 	[DayOfWeek] varchar(20) NULL, 
 	[DayOfWeekNum] smallint NULL, 

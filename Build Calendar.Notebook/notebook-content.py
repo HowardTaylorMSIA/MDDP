@@ -39,7 +39,7 @@ from delta.tables import *
 # PARAMETERS CELL ********************
 
 startyear = 2013
-endyear = datetime.now().year + 1
+endyear = 2025
 
 # METADATA ********************
 
