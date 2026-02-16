@@ -16,7 +16,7 @@ DECLARE @UpdateCount INT, @InsertCount INT
 IF @StartDate IS NULL
 BEGIN
     SELECT @StartDate = isnull(MAX(LastUpdated),'2013-01-01') 
-    FROM [lh_fabric_demo].[dbo].[SalesOrders]
+    FROM [dw_fabric_demo].[Gold].[SalesOrders]
 END;
 
 IF @EndDate IS NULL
@@ -32,19 +32,19 @@ SET target.OrderDate = source.OrderDate,
             target.ExtendedPrice = source.ExtendedPrice,
             target.Quantity = source.Quantity,
             target.LastUpdated = source.LastUpdated
-FROM [lh_fabric_demo].[dbo].[SalesOrders] AS target
+FROM [dw_fabric_demo].[Gold].[SalesOrders] AS target
     INNER JOIN [lh_fabric_demo].[Silver].[vSalesOrders] AS source
     ON (target.OrderID = source.OrderID AND target.OrderLineID = source.OrderLineID)
     WHERE source.LastUpdated BETWEEN @StartDate and @EndDate;
 
 SELECT @UpdateCount = @@ROWCOUNT   
 
-INSERT INTO [lh_fabric_demo].[dbo].[SalesOrders] (OrderID, OrderLineID, OrderDate, CustomerID, StockItemID, SalespersonPersonID, 
+INSERT INTO [dw_fabric_demo].[Gold].[SalesOrders] (OrderID, OrderLineID, OrderDate, CustomerID, StockItemID, SalespersonPersonID, 
             ExtendedPrice, Quantity, LastUpdated)
     SELECT source.OrderID, source.OrderLineID, source.OrderDate, source.CustomerID, source.StockItemID, source.SalespersonPersonID,
             source.ExtendedPrice, source.Quantity, source.LastUpdated
     FROM [lh_fabric_demo].[Silver].[vSalesOrders] AS source
-    LEFT JOIN [lh_fabric_demo].[dbo].[SalesOrders] AS target
+    LEFT JOIN [dw_fabric_demo].[Gold].[SalesOrders] AS target
     ON (target.OrderID = source.OrderID AND target.OrderLineID = source.OrderLineID)
     WHERE target.OrderID IS NULL AND target.OrderLineID IS NULL AND source.LastUpdated BETWEEN @StartDate and @EndDate;
 
