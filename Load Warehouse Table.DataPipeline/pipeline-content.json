@@ -187,7 +187,128 @@
               ]
             }
           ],
-          "ifFalseActivities": []
+          "ifFalseActivities": [
+            {
+              "type": "Lookup",
+              "typeProperties": {
+                "source": {
+                  "type": "DataWarehouseSource",
+                  "sqlReaderStoredProcedureName": {
+                    "value": "@{pipeline().parameters.storedprocschema}.@{pipeline().parameters.storedprocname}",
+                    "type": "Expression"
+                  },
+                  "storedProcedureParameters": {
+                    "EndDate": {
+                      "type": "Datetime"
+                    },
+                    "StartDate": {
+                      "type": "Datetime"
+                    }
+                  },
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00"
+                },
+                "datasetSettings": {
+                  "type": "DataWarehouseTable",
+                  "schema": [],
+                  "connectionSettings": {
+                    "name": "dw_fabric_demo",
+                    "properties": {
+                      "type": "DataWarehouse",
+                      "typeProperties": {
+                        "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
+                        "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
+                        "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
+                      },
+                      "externalReferences": {
+                        "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "annotations": []
+                },
+                "firstRowOnly": true
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Load Incremental via Stored Proc",
+              "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "pipelineendtime",
+                "value": {
+                  "value": "@utcnow()",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set pipeline endtime_incr",
+              "dependsOn": [
+                {
+                  "activity": "Load Incremental via Stored Proc",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Succeeded', sinkmaxdatetime = '@{activity('Load Incremental via Stored Proc').output.firstRow.MaxDate}', sourcestartdate = '@{activity('Load Incremental via Stored Proc').output.firstRow.MaxDate}', rowsupdated = @{activity('Load Incremental via Stored Proc').output.firstRow.UpdateCount}, rowsinserted = @{activity('Load Incremental via Stored Proc').output.firstRow.InsertCount},  pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "connectionSettings": {
+                "name": "FabricMetadataOrchestration",
+                "properties": {
+                  "type": "FabricSqlDatabase",
+                  "typeProperties": {
+                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "externalReferences": {
+                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Update Pipeline Run details_incr",
+              "dependsOn": [
+                {
+                  "activity": "Set pipeline endtime_incr",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         "name": "Check loadtype",
         "dependsOn": [

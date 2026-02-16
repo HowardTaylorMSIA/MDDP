@@ -1,5 +1,5 @@
--- Find/Replace [MyFTAFabricWarehouse] with your Warehouse Name
-CREATE   PROC [Gold].[IncrLoadInvoicedSales]
+-- Find/Replace [lh_fabric_demo] with your Warehouse Name
+CREATE         PROC [Gold].[IncrLoadInvoicedSales]
 @StartDate DATETIME,
 @EndDate DATETIME
 AS
@@ -13,7 +13,7 @@ DECLARE @UpdateCount INT, @InsertCount INT
 IF @StartDate IS NULL
 BEGIN
     SELECT @StartDate = isnull(MAX(LastUpdated),'2013-01-01') 
-    FROM [MyFTAFabricWarehouse].[Gold].[InvoicedSales]
+    FROM [lh_fabric_demo].[dbo].[InvoicedSales]
 END;
 
 IF @EndDate IS NULL
@@ -31,19 +31,19 @@ SET target.InvoiceDate = source.InvoiceDate,
             target.GrossProfit = source.GrossProfit,
             target.TaxAmount = source.TaxAmount,
             target.LastUpdated = source.LastUpdated
-FROM [MyFTAFabricWarehouse].[Gold].[InvoicedSales] AS target
-    INNER JOIN [MyFTAFabricWarehouse].[Silver].[vInvoicedSales] AS source
+FROM [lh_fabric_demo].[dbo].[InvoicedSales] AS target
+    INNER JOIN [lh_fabric_demo].[Silver].[vInvoicedSales] AS source
     ON (target.InvoiceID = source.InvoiceID AND target.InvoiceLineID = source.InvoiceLineID)
     WHERE source.LastUpdated BETWEEN @StartDate and @EndDate;
 
  SELECT @UpdateCount = @@ROWCOUNT   
 
-INSERT INTO [MyFTAFabricWarehouse].[Gold].[InvoicedSales] (InvoiceID, InvoiceLineID, InvoiceDate, CustomerID, StockItemID, SalespersonPersonID, 
+INSERT INTO [lh_fabric_demo].[dbo].[InvoicedSales] (InvoiceID, InvoiceLineID, InvoiceDate, CustomerID, StockItemID, SalespersonPersonID, 
             ExtendedPrice, Quantity,GrossProfit,TaxAmount, LastUpdated)
     SELECT source.InvoiceID, source.InvoiceLineID, source.InvoiceDate, source.CustomerID, source.StockItemID, source.SalespersonPersonID,
             source.ExtendedPrice, source.Quantity, source.GrossProfit, source.TaxAmount,source.LastUpdated
-    FROM [MyFTAFabricWarehouse].[Silver].[vInvoicedSales] AS source
-    LEFT JOIN [MyFTAFabricWarehouse].[Gold].[InvoicedSales] AS target
+    FROM [lh_fabric_demo].[Silver].[vInvoicedSales] AS source
+    LEFT JOIN [lh_fabric_demo].[dbo].[InvoicedSales] AS target
     ON (target.InvoiceID = source.InvoiceID AND target.InvoiceLineID = source.InvoiceLineID)
     WHERE target.InvoiceID IS NULL AND target.InvoiceLineID IS NULL AND source.LastUpdated  BETWEEN @StartDate and @EndDate
 END

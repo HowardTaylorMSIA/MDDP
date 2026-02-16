@@ -191,6 +191,112 @@
             ]
           }
         ]
+      },
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "FabricSqlDatabaseSource",
+            "sqlReaderQuery": {
+              "value": "select \\* from dbo.PipelineOrchestrator_FabricWarehouse where skipload=0 and @{pipeline().parameters.loaddwh} = 1",
+              "type": "Expression"
+            },
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "FabricSqlDatabaseTable",
+            "schema": [],
+            "connectionSettings": {
+              "name": "FabricMetadataOrchestration",
+              "properties": {
+                "type": "FabricSqlDatabase",
+                "typeProperties": {
+                  "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000"
+                },
+                "externalReferences": {
+                  "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Get tables to load to warehouse",
+        "dependsOn": [
+          {
+            "activity": "Build Calendar",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Get tables to load to warehouse').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "InvokePipeline",
+              "typeProperties": {
+                "parameters": {
+                  "sourcestartdate": {
+                    "value": "@item().sourcestartdate",
+                    "type": "Expression"
+                  },
+                  "sourceenddate": "@item().sourceenddate",
+                  "sourceschema": "@item().sourceschema",
+                  "sourcetable": "@item().sourcetable",
+                  "sinkschema": "@item().sinkschema",
+                  "loadtype": "@item().loadtype",
+                  "batchloaddatetime": "@variables('batchloaddatetime')",
+                  "sinktable": "@item().sinktable",
+                  "storedprocschema": "@item().storedprocschema",
+                  "storedprocname": "@item().storedprocname"
+                },
+                "waitOnCompletion": false,
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "pipelineId": "f51982d9-6ea4-a180-41e4-a856c8a3a328",
+                "operationType": "InvokeFabricPipeline"
+              },
+              "externalReferences": {
+                "connection": "f6a2569f-14e5-49bb-83f5-20dc22d86b49"
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Invoke Load Warehouse Table",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "For each table to load to warehouse",
+        "dependsOn": [
+          {
+            "activity": "Get tables to load to warehouse",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
     ],
     "parameters": {
@@ -213,10 +319,6 @@
       "loadbronze": {
         "type": "int",
         "defaultValue": 1
-      },
-      "waittime": {
-        "type": "int",
-        "defaultValue": 300
       }
     },
     "variables": {
