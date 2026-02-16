@@ -1,1 +1,2 @@
 # mddp
+> **Note — ForEach Throttling:** The orchestrator pipeline's ForEach loop is limited to `batchCount: 2` to avoid HTTP 429/430 throttling errors on Fabric F2 capacity. If running on F8 or higher, you can increase or remove this limit to enable full parallel processing of all batches.
