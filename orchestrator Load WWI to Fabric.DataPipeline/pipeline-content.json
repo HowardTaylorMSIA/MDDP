@@ -154,33 +154,46 @@
         ]
       },
       {
-        "type": "TridentNotebook",
+        "type": "IfCondition",
         "typeProperties": {
-          "notebookId": "76f9c506-fc86-b642-407e-31a1c5c62b06",
-          "workspaceId": "00000000-0000-0000-0000-000000000000",
-          "parameters": {
-            "startyear": {
-              "value": {
-                "value": "@pipeline().parameters.startyear",
-                "type": "Expression"
+          "expression": {
+            "value": "@equals(pipeline().parameters.loadcalendar,1)",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "76f9c506-fc86-b642-407e-31a1c5c62b06",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "startyear": {
+                    "value": {
+                      "value": "@pipeline().parameters.startyear",
+                      "type": "Expression"
+                    },
+                    "type": "int"
+                  },
+                  "endyear": {
+                    "value": {
+                      "value": "@pipeline().parameters.endyear",
+                      "type": "Expression"
+                    },
+                    "type": "int"
+                  }
+                }
               },
-              "type": "int"
-            },
-            "endyear": {
-              "value": {
-                "value": "@pipeline().parameters.endyear",
-                "type": "Expression"
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
               },
-              "type": "int"
+              "name": "Build Calendar Notebook",
+              "dependsOn": []
             }
-          }
-        },
-        "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
-          "retryIntervalInSeconds": 30,
-          "secureInput": false,
-          "secureOutput": false
+          ]
         },
         "name": "Build Calendar",
         "dependsOn": [
@@ -317,6 +330,10 @@
         "defaultValue": 1
       },
       "loadbronze": {
+        "type": "int",
+        "defaultValue": 1
+      },
+      "loadcalendar": {
         "type": "int",
         "defaultValue": 1
       }

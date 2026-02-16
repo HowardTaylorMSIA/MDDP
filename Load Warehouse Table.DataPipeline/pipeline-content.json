@@ -194,10 +194,18 @@
                   },
                   "storedProcedureParameters": {
                     "EndDate": {
-                      "type": "Datetime"
+                      "type": "Datetime",
+                      "value": {
+                        "value": "@pipeline().parameters.sourceenddate",
+                        "type": "Expression"
+                      }
                     },
                     "StartDate": {
-                      "type": "Datetime"
+                      "type": "Datetime",
+                      "value": {
+                        "value": "@pipeline().parameters.sourcestartdate",
+                        "type": "Expression"
+                      }
                     }
                   },
                   "partitionOption": "None",
