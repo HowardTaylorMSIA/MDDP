@@ -13,7 +13,9 @@ Azure SQL (WWI) ──► Lakehouse (Bronze) ──► Calendar ──► Optimi
 
 ## Workspace Folder Structure
 
-The Fabric workspace is organized into numbered folders that mirror the pipeline execution flow, making it easy to understand data lineage and map to Taskflows.
+Fabric workspace folders are a **UI-only concept** — they are configured within the Fabric workspace, not through the git repo structure. All artifact folders must remain at the root of the git sync directory.
+
+The recommended workspace folder layout (created manually in Fabric) mirrors the pipeline execution flow for easy navigation and Taskflow alignment:
 
 ```
 📁 1. Orchestration
@@ -47,6 +49,8 @@ The Fabric workspace is organized into numbered folders that mirror the pipeline
 📁 9. Reports
 │   └── (Power BI reports - future)
 ```
+
+> **Note:** To set up these folders, create them in the Fabric workspace UI and drag items into them. This is safe because all cross-references use GUIDs — moving items between folders never breaks pipeline or notebook references.
 
 ### Taskflow Mapping
 
