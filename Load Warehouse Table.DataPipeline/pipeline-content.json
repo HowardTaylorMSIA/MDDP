@@ -105,8 +105,8 @@
               },
               "policy": {
                 "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
+                "retry": 2,
+                "retryIntervalInSeconds": 60,
                 "secureInput": false,
                 "secureOutput": false
               },
@@ -180,6 +180,51 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Failed', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{utcnow()}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "connectionSettings": {
+                "name": "FabricMetadataOrchestration",
+                "properties": {
+                  "type": "FabricSqlDatabase",
+                  "typeProperties": {
+                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "externalReferences": {
+                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Log Full Load Failure",
+              "dependsOn": [
+                {
+                  "activity": "Copy data to warehouse",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                }
+              ]
             }
           ],
           "ifFalseActivities": [
@@ -235,8 +280,8 @@
               },
               "policy": {
                 "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
+                "retry": 2,
+                "retryIntervalInSeconds": 60,
                 "secureInput": false,
                 "secureOutput": false
               },
@@ -307,6 +352,51 @@
                   "activity": "Set pipeline endtime_incr",
                   "dependencyConditions": [
                     "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Failed', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{utcnow()}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "connectionSettings": {
+                "name": "FabricMetadataOrchestration",
+                "properties": {
+                  "type": "FabricSqlDatabase",
+                  "typeProperties": {
+                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "externalReferences": {
+                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Log Incremental Load Failure",
+              "dependsOn": [
+                {
+                  "activity": "Load Incremental via Stored Proc",
+                  "dependencyConditions": [
+                    "Failed"
                   ]
                 }
               ]

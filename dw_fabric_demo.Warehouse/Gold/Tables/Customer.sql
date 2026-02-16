@@ -5,7 +5,7 @@ CREATE TABLE [Gold].[Customer] (
 	[BuyingGroupName] varchar(50) NULL, 
 	[CreditLimit] decimal(10,2) NULL, 
 	[CustomerCategoryID] int NULL, 
-	[CustomerID] int NULL, 
+	[CustomerID] int NOT NULL, 
 	[CustomerName] varchar(100) NULL, 
 	[DeliveryCityID] int NULL, 
 	[DeliveryCity] varchar(50) NULL, 
