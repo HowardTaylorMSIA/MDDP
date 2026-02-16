@@ -206,6 +206,51 @@
         ]
       },
       {
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(pipeline().parameters.loadoptimize,1)",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "TridentNotebook",
+              "typeProperties": {
+                "notebookId": "498a0e72-0cd0-4218-9e74-b2f5d40db637",
+                "workspaceId": "00000000-0000-0000-0000-000000000000",
+                "parameters": {
+                  "vacuum_retention_hours": {
+                    "value": {
+                      "value": "@pipeline().parameters.vacuum_retention_hours",
+                      "type": "Expression"
+                    },
+                    "type": "int"
+                  }
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Optimize Lakehouse Tables Notebook",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "Optimize Lakehouse Tables",
+        "dependsOn": [
+          {
+            "activity": "Build Calendar",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
         "type": "Lookup",
         "typeProperties": {
           "source": {
@@ -248,7 +293,7 @@
         "name": "Get tables to load to warehouse",
         "dependsOn": [
           {
-            "activity": "Build Calendar",
+            "activity": "Optimize Lakehouse Tables",
             "dependencyConditions": [
               "Succeeded"
             ]
