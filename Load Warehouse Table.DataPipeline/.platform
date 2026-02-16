@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "Load Warehouse Table"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f51982d9-6ea4-a180-41e4-a856c8a3a328"
+  }
+}
