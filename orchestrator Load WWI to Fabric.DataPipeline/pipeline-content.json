@@ -332,6 +332,14 @@
       "loadcalendar": {
         "type": "int",
         "defaultValue": 1
+      },
+      "loadoptimize": {
+        "type": "int",
+        "defaultValue": 1
+      },
+      "vacuum_retention_hours": {
+        "type": "int",
+        "defaultValue": 168
       }
     },
     "variables": {
