@@ -5,18 +5,6 @@
 # META {
 # META   "kernel_info": {
 # META     "name": "synapse_pyspark"
-# META   },
-# META   "dependencies": {
-# META     "lakehouse": {
-# META       "default_lakehouse": "d3952fd1-aa92-4d42-84fd-a99afcc6614d",
-# META       "default_lakehouse_name": "lh_fabric_demo",
-# META       "default_lakehouse_workspace_id": "ecfcf483-666f-4267-9456-d09b370c4a12",
-# META       "known_lakehouses": [
-# META         {
-# META           "id": "d3952fd1-aa92-4d42-84fd-a99afcc6614d"
-# META         }
-# META       ]
-# META     }
 # META   }
 # META }
 
@@ -32,13 +20,6 @@
 # Reference:
 # - [Delta Lake table optimization and V-Order](https://learn.microsoft.com/en-us/fabric/data-engineering/delta-optimization-and-v-order?tabs=sparksql)
 # - [Delta Table Maintenance](https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-table-maintenance)
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -71,13 +52,6 @@ vacuum_retention_hours = 168
 # Enable optimized writes and auto-compaction at the Spark session level.
 # These settings ensure that future writes also benefit from Delta optimizations.
 
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
 # CELL ********************
 
 # Enable V-Order and optimized writes at session level
@@ -97,13 +71,6 @@ spark.conf.set("spark.microsoft.delta.optimizeWrite.binSize", "1073741824")  # 1
 # ## Discover all Delta tables
 # 
 # Query the lakehouse catalog to get a list of all managed tables.
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -128,13 +95,6 @@ print(f"Found {len(table_list)} tables to optimize: {table_list}")
 # 
 # V-Order is a Fabric-specific write-time optimization that organizes Parquet data for faster reads
 # with no cost at read time. It is compatible with all Parquet readers.
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -197,13 +157,6 @@ for table_name in table_list:
 # 
 # **Note:** VACUUM does not remove log files — those are managed by Delta checkpointing.
 
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
-
 # CELL ********************
 
 vacuum_results = []
@@ -244,13 +197,6 @@ for table_name in table_list:
 # ## Summary
 # 
 # Display the results of the optimization run.
-
-# METADATA ********************
-
-# META {
-# META   "language": "python",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
