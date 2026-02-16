@@ -1,7 +1,7 @@
 CREATE TABLE [Gold].[SalesOrders] (
 
-	[OrderID] int NULL, 
-	[OrderLineID] int NULL, 
+	[OrderID] int NOT NULL, 
+	[OrderLineID] int NOT NULL, 
 	[CustomerID] int NULL, 
 	[StockItemID] int NULL, 
 	[SalespersonPersonID] int NULL, 

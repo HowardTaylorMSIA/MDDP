@@ -1,6 +1,6 @@
 CREATE TABLE [Gold].[Products] (
 
-	[StockItemID] int NULL, 
+	[StockItemID] int NOT NULL, 
 	[StockItemName] varchar(100) NULL, 
 	[SupplierID] int NULL, 
 	[SupplierName] varchar(100) NULL, 

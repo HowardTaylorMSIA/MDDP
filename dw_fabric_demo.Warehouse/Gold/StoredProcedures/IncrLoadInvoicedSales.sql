@@ -45,9 +45,10 @@ INSERT INTO [dw_fabric_demo].[Gold].[InvoicedSales] (InvoiceID, InvoiceLineID, I
     FROM [lh_fabric_demo].[Silver].[vInvoicedSales] AS source
     LEFT JOIN [dw_fabric_demo].[Gold].[InvoicedSales] AS target
     ON (target.InvoiceID = source.InvoiceID AND target.InvoiceLineID = source.InvoiceLineID)
-    WHERE target.InvoiceID IS NULL AND target.InvoiceLineID IS NULL AND source.LastUpdated  BETWEEN @StartDate and @EndDate
+    WHERE target.InvoiceID IS NULL AND target.InvoiceLineID IS NULL AND source.LastUpdated  BETWEEN @StartDate and @EndDate;
+
+ SELECT @InsertCount = @@ROWCOUNT;
+
+ SELECT @UpdateCount as UpdateCount, @InsertCount as InsertCount, (SELECT MAX(LastUpdated) FROM [dw_fabric_demo].[Gold].[InvoicedSales]) as MaxDate;
+
 END
-
- SELECT @InsertCount = @@ROWCOUNT  
-
- SELECT @UpdateCount as UpdateCount, @InsertCount as InsertCount, @StartDate as MaxDate

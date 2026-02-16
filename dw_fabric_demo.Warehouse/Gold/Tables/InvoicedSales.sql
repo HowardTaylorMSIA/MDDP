@@ -1,7 +1,7 @@
 CREATE TABLE [Gold].[InvoicedSales] (
 
-	[InvoiceID] int NULL, 
-	[InvoiceLineID] int NULL, 
+	[InvoiceID] int NOT NULL, 
+	[InvoiceLineID] int NOT NULL, 
 	[CustomerID] int NULL, 
 	[StockItemID] int NULL, 
 	[SalespersonPersonID] int NULL, 

@@ -115,8 +115,8 @@
               },
               "policy": {
                 "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
+                "retry": 2,
+                "retryIntervalInSeconds": 60,
                 "secureInput": false,
                 "secureOutput": false
               },
@@ -158,8 +158,8 @@
               },
               "policy": {
                 "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
+                "retry": 2,
+                "retryIntervalInSeconds": 60,
                 "secureInput": false,
                 "secureOutput": false
               },
@@ -286,6 +286,51 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Failed', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{utcnow()}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}'",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "connectionSettings": {
+                "name": "FabricMetadataOrchestration",
+                "properties": {
+                  "type": "FabricSqlDatabase",
+                  "typeProperties": {
+                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "externalReferences": {
+                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Log Full Load Failure",
+              "dependsOn": [
+                {
+                  "activity": "Copy data to delta table",
+                  "dependencyConditions": [
+                    "Failed"
+                  ]
+                }
+              ]
             }
           ],
           "ifFalseActivities": [
@@ -368,8 +413,8 @@
               },
               "policy": {
                 "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
+                "retry": 2,
+                "retryIntervalInSeconds": 60,
                 "secureInput": false,
                 "secureOutput": false
               },
@@ -411,8 +456,8 @@
               },
               "policy": {
                 "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
+                "retry": 2,
+                "retryIntervalInSeconds": 60,
                 "secureInput": false,
                 "secureOutput": false
               },
@@ -559,6 +604,51 @@
                   "activity": "Set pipeline endtime incr",
                   "dependencyConditions": [
                     "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Failed', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{utcnow()}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}'",
+                      "type": "Expression"
+                    },
+                    "type": "NonQuery"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "connectionSettings": {
+                "name": "FabricMetadataOrchestration",
+                "properties": {
+                  "type": "FabricSqlDatabase",
+                  "typeProperties": {
+                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "externalReferences": {
+                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Log Incremental Load Failure",
+              "dependsOn": [
+                {
+                  "activity": "Copy data to parquet",
+                  "dependencyConditions": [
+                    "Failed"
                   ]
                 }
               ]

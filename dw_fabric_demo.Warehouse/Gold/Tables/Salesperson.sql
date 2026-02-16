@@ -1,5 +1,5 @@
 CREATE TABLE [Gold].[Salesperson] (
 
-	[PersonID] int NULL, 
+	[PersonID] int NOT NULL, 
 	[FullName] varchar(50) NULL
 );

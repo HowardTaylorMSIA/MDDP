@@ -48,7 +48,8 @@ INSERT INTO [dw_fabric_demo].[Gold].[SalesOrders] (OrderID, OrderLineID, OrderDa
     ON (target.OrderID = source.OrderID AND target.OrderLineID = source.OrderLineID)
     WHERE target.OrderID IS NULL AND target.OrderLineID IS NULL AND source.LastUpdated BETWEEN @StartDate and @EndDate;
 
-SELECT @InsertCount = @@ROWCOUNT  
+SELECT @InsertCount = @@ROWCOUNT;
 
-SELECT @UpdateCount as UpdateCount, @InsertCount as InsertCount, @StartDate as MaxDate   
+SELECT @UpdateCount as UpdateCount, @InsertCount as InsertCount, (SELECT MAX(LastUpdated) FROM [dw_fabric_demo].[Gold].[SalesOrders]) as MaxDate;
+
 END
