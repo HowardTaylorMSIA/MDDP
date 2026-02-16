@@ -216,7 +216,7 @@
             {
               "type": "TridentNotebook",
               "typeProperties": {
-                "notebookId": "498a0e72-0cd0-4218-9e74-b2f5d40db637",
+                "notebookId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
                 "workspaceId": "00000000-0000-0000-0000-000000000000",
                 "parameters": {
                   "vacuum_retention_hours": {
