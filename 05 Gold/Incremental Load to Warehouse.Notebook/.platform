@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "Incremental Load to Warehouse",
+    "description": "Replaces Stored Procedure incremental load - reads changed rows from lakehouse Silver view and applies DELETE+INSERT to warehouse Gold table"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a8b7c6d5-e4f3-4210-9876-fedcba987654"
+  }
+}

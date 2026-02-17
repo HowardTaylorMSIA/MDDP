@@ -382,63 +382,308 @@
           ],
           "ifFalseActivities": [
             {
-              "type": "Lookup",
+              "type": "IfCondition",
               "typeProperties": {
-                "source": {
-                  "type": "DataWarehouseSource",
-                  "sqlReaderStoredProcedureName": {
-                    "value": "@{pipeline().parameters.storedprocschema}.@{pipeline().parameters.storedprocname}",
-                    "type": "Expression"
+                "expression": {
+                  "value": "@equals(pipeline().parameters.NotebookVsCopydata,1)",
+                  "type": "Expression"
+                },
+                "ifTrueActivities": [
+                  {
+                    "type": "TridentNotebook",
+                    "typeProperties": {
+                      "notebookId": "a8b7c6d5-e4f3-4210-9876-fedcba987654",
+                      "workspaceId": "00000000-0000-0000-0000-000000000000",
+                      "parameters": {
+                        "sinkSchema": {
+                          "value": {
+                            "value": "@pipeline().parameters.sinkschema",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        },
+                        "sinkTable": {
+                          "value": {
+                            "value": "@pipeline().parameters.sinktable",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        },
+                        "startDate": {
+                          "value": {
+                            "value": "@pipeline().parameters.sourcestartdate",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        },
+                        "endDate": {
+                          "value": {
+                            "value": "@pipeline().parameters.sourceenddate",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 2,
+                      "retryIntervalInSeconds": 60,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Incr Load via Notebook",
+                    "dependsOn": []
                   },
-                  "storedProcedureParameters": {
-                    "EndDate": {
-                      "type": "Datetime",
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "incrStatus",
                       "value": {
-                        "value": "@pipeline().parameters.sourceenddate",
+                        "value": "@split(split(activity('Incr Load via Notebook').output.result.exitValue,';;')[0],'=')[1]",
                         "type": "Expression"
                       }
                     },
-                    "StartDate": {
-                      "type": "Datetime",
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set incrStatus NB",
+                    "dependsOn": [
+                      {
+                        "activity": "Incr Load via Notebook",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "incrUpdateCount",
                       "value": {
-                        "value": "@pipeline().parameters.sourcestartdate",
+                        "value": "@split(split(activity('Incr Load via Notebook').output.result.exitValue,';;')[1],'=')[1]",
                         "type": "Expression"
                       }
-                    }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set incrUpdateCount NB",
+                    "dependsOn": [
+                      {
+                        "activity": "Set incrStatus NB",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
                   },
-                  "partitionOption": "None",
-                  "queryTimeout": "02:00:00"
-                },
-                "datasetSettings": {
-                  "type": "DataWarehouseTable",
-                  "schema": [],
-                  "connectionSettings": {
-                    "name": "dw_fabric_demo",
-                    "properties": {
-                      "type": "DataWarehouse",
-                      "typeProperties": {
-                        "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
-                        "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
-                        "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
-                      },
-                      "externalReferences": {
-                        "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
-                      },
-                      "annotations": []
-                    }
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "incrInsertCount",
+                      "value": {
+                        "value": "@split(split(activity('Incr Load via Notebook').output.result.exitValue,';;')[2],'=')[1]",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set incrInsertCount NB",
+                    "dependsOn": [
+                      {
+                        "activity": "Set incrUpdateCount NB",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
                   },
-                  "annotations": []
-                },
-                "firstRowOnly": true
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "incrMaxDate",
+                      "value": {
+                        "value": "@split(split(activity('Incr Load via Notebook').output.result.exitValue,';;')[3],'=')[1]",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set incrMaxDate NB",
+                    "dependsOn": [
+                      {
+                        "activity": "Set incrInsertCount NB",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "ifFalseActivities": [
+                  {
+                    "type": "Lookup",
+                    "typeProperties": {
+                      "source": {
+                        "type": "DataWarehouseSource",
+                        "sqlReaderStoredProcedureName": {
+                          "value": "@{pipeline().parameters.storedprocschema}.@{pipeline().parameters.storedprocname}",
+                          "type": "Expression"
+                        },
+                        "storedProcedureParameters": {
+                          "EndDate": {
+                            "type": "Datetime",
+                            "value": {
+                              "value": "@pipeline().parameters.sourceenddate",
+                              "type": "Expression"
+                            }
+                          },
+                          "StartDate": {
+                            "type": "Datetime",
+                            "value": {
+                              "value": "@pipeline().parameters.sourcestartdate",
+                              "type": "Expression"
+                            }
+                          }
+                        },
+                        "partitionOption": "None",
+                        "queryTimeout": "02:00:00"
+                      },
+                      "datasetSettings": {
+                        "type": "DataWarehouseTable",
+                        "schema": [],
+                        "connectionSettings": {
+                          "name": "dw_fabric_demo",
+                          "properties": {
+                            "type": "DataWarehouse",
+                            "typeProperties": {
+                              "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
+                              "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
+                              "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
+                            },
+                            "externalReferences": {
+                              "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
+                            },
+                            "annotations": []
+                          }
+                        },
+                        "annotations": []
+                      },
+                      "firstRowOnly": true
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 2,
+                      "retryIntervalInSeconds": 60,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Load Incremental via Stored Proc",
+                    "dependsOn": []
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "incrStatus",
+                      "value": {
+                        "value": "Succeeded",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set incrStatus SP",
+                    "dependsOn": [
+                      {
+                        "activity": "Load Incremental via Stored Proc",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "incrUpdateCount",
+                      "value": {
+                        "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.UpdateCount)",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set incrUpdateCount SP",
+                    "dependsOn": [
+                      {
+                        "activity": "Set incrStatus SP",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "incrInsertCount",
+                      "value": {
+                        "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.InsertCount)",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set incrInsertCount SP",
+                    "dependsOn": [
+                      {
+                        "activity": "Set incrUpdateCount SP",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "incrMaxDate",
+                      "value": {
+                        "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.MaxDate)",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set incrMaxDate SP",
+                    "dependsOn": [
+                      {
+                        "activity": "Set incrInsertCount SP",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  }
+                ]
               },
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 2,
-                "retryIntervalInSeconds": 60,
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Load Incremental via Stored Proc",
+              "name": "Use Notebook or StoredProc Incr",
               "dependsOn": []
             },
             {
@@ -457,7 +702,7 @@
               "name": "Set pipeline endtime_incr",
               "dependsOn": [
                 {
-                  "activity": "Load Incremental via Stored Proc",
+                  "activity": "Use Notebook or StoredProc Incr",
                   "dependencyConditions": [
                     "Succeeded"
                   ]
@@ -470,7 +715,7 @@
                 "scripts": [
                   {
                     "text": {
-                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Succeeded', sinkmaxdatetime = '@{activity('Load Incremental via Stored Proc').output.firstRow.MaxDate}', sourcestartdate = '@{activity('Load Incremental via Stored Proc').output.firstRow.MaxDate}', rowsupdated = @{activity('Load Incremental via Stored Proc').output.firstRow.UpdateCount}, rowsinserted = @{activity('Load Incremental via Stored Proc').output.firstRow.InsertCount},  pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
+                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{variables('incrStatus')}', sinkmaxdatetime = '@{variables('incrMaxDate')}', sourcestartdate = '@{variables('incrMaxDate')}', rowsupdated = @{variables('incrUpdateCount')}, rowsinserted = @{variables('incrInsertCount')},  pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
                       "type": "Expression"
                     },
                     "type": "NonQuery"
@@ -547,7 +792,7 @@
               "name": "Log Incremental Load Failure",
               "dependsOn": [
                 {
-                  "activity": "Load Incremental via Stored Proc",
+                  "activity": "Use Notebook or StoredProc Incr",
                   "dependencyConditions": [
                     "Failed"
                   ]
@@ -614,6 +859,18 @@
         "type": "String"
       },
       "sourceRowsCopied": {
+        "type": "String"
+      },
+      "incrStatus": {
+        "type": "String"
+      },
+      "incrUpdateCount": {
+        "type": "String"
+      },
+      "incrInsertCount": {
+        "type": "String"
+      },
+      "incrMaxDate": {
         "type": "String"
       }
     }
