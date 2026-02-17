@@ -17,7 +17,6 @@ CREATE PROC [Gold].[IncrLoadSalesOrders]
 AS
 BEGIN
     SET NOCOUNT ON;
-    SET XACT_ABORT ON;
 
     DECLARE @UpdateCount INT, @InsertCount INT;
 
