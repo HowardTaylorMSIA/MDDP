@@ -1,0 +1,100 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 195.1615954599651,
+            "y": 646.451796445233
+          },
+          "nodeIndex": "Calendar",
+          "nodeLineageTag": "9d421a19-d9e7-4be2-8689-8aa2e0068ba7",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 680.48618620066941,
+            "y": 562.6231830844755
+          },
+          "nodeIndex": "Customer",
+          "nodeLineageTag": "104438d8-8c1f-4fcf-861a-be2f13d868bc",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 397.61208250728072,
+            "y": 331.14767066029987
+          },
+          "nodeIndex": "InvoicedSales",
+          "nodeLineageTag": "cbf6970b-216d-4d0a-8614-1a7bc9fd2ad3",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 244.35721959770871
+          },
+          "nodeIndex": "Products",
+          "nodeLineageTag": "807d838a-5f57-44af-9b53-d790106e8b15",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.18915119375993,
+            "y": -50
+          },
+          "nodeIndex": "SalesOrders",
+          "nodeLineageTag": "e3fd8e66-d5de-4f09-98b3-dc16827015fb",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 680.53344350186876,
+            "y": 236.10516809252942
+          },
+          "nodeIndex": "Salesperson",
+          "nodeLineageTag": "1beb30fa-c09b-4e84-acd3-de8ab3edc3aa",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 77.348950566933482,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

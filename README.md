@@ -44,10 +44,10 @@ The recommended workspace folder layout (created manually in Fabric) mirrors the
 │   └── My Activator                              (Reflex - alerting)
 │
 📁 8. Semantic Model
-│   └── (Power BI semantic model - future)
+│   └── dw_fabric_demo                            (Semantic model - DirectLake over Gold)
 │
 📁 9. Reports
-│   └── (Power BI reports - future)
+│   └── Sales Report Project                      (Power BI report - PBIP format)
 ```
 
 > **Note:** To set up these folders, create them in the Fabric workspace UI and drag items into them. This is safe because all cross-references use GUIDs — moving items between folders never breaks pipeline or notebook references.
@@ -65,8 +65,8 @@ Each folder maps to a stage in the end-to-end Taskflow:
 | 5 | Gold | After Optimization | Loads warehouse Gold schema via stored procedures |
 | 6 | Metadata | Always available | Control tables that drive pipeline behavior |
 | 7 | Monitoring | Event-driven | Reflex alerts on pipeline events |
-| 8 | Semantic Model | After Gold | Power BI dataset over warehouse Gold tables |
-| 9 | Reports | On demand | Power BI reports and dashboards |
+| 8 | Semantic Model | After Gold | DirectLake semantic model over warehouse Gold tables |
+| 9 | Reports | On demand | Sales Report Project (PBIP) |
 
 ## Pipeline Parameters
 
@@ -88,6 +88,18 @@ The orchestrator pipeline exposes these parameters to control execution:
 - **Incremental + Full load**: Each table can be configured for full or incremental loading via the `loadtype` column
 - **V-Order optimization**: Delta tables are compacted with V-Order encoding for optimal read performance across Spark, SQL, and Power BI
 - **All cross-references use GUIDs**: Notebook IDs, pipeline IDs, artifact IDs, and connection IDs — folder reorganization never breaks references
+
+## Semantic Model (dw_fabric_demo)
+
+The DirectLake semantic model connects to the `dw_fabric_demo` warehouse Gold schema. BPA (Best Practice Analyzer) rules have been applied:
+
+- **10 explicit measures** defined (Total Revenue, Total Gross Profit, Gross Profit Margin %, etc.)
+- **`discourageImplicitMeasures = true`** to prevent drag-and-drop implicit aggregations
+- **Relationships corrected**: removed invalid fact-to-fact link (InvoicedSales→SalesOrders); added 4 proper SalesOrders→dimension relationships (Calendar, Customer, Products, Salesperson)
+- **FK/ID columns hidden** and `SummarizeBy = None` set on all key/identifier columns
+- **Sort-by columns** configured: Month→MonthNum, DayOfWeek→DayOfWeekNum, Quarter→QuarterNum
+- **Calendar table** marked as date table (`DataCategory = Time`) with data categories on date columns
+- **Table descriptions** added to all 6 tables
 
 ## Capacity Note
 
