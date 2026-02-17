@@ -397,7 +397,7 @@
       },
       "loaddwh": {
         "type": "int",
-        "defaultValue": 0
+        "defaultValue": 1
       },
       "loadbronze": {
         "type": "int",
