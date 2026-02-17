@@ -104,3 +104,9 @@ The DirectLake semantic model connects to the `dw_fabric_demo` warehouse Gold sc
 ## Capacity Note
 
 > **ForEach Throttling:** The orchestrator pipeline's ForEach loop is limited to `batchCount: 2` to avoid HTTP 429/430 throttling errors on Fabric F2 capacity. If running on F8 or higher, you can increase or remove this limit to enable full parallel processing of all batches.
+
+## Power BI App
+
+A published Power BI app providing an interactive Sales Report dashboard built from the Gold warehouse semantic model. Use this link to view the live report (requires access to the tenant):
+
+[Open Power BI App](https://app.powerbi.com/Redirect?action=OpenApp&appId=3e91b685-b56a-4790-a30d-23d05a423cba&ctid=ee424a5e-2c69-4c1d-a40d-9ba432fceca8&experience=power-bi)
