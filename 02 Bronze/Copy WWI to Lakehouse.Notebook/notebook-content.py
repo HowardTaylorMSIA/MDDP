@@ -1,24 +1,5 @@
 # Fabric notebook source
 
-# METADATA ********************
-
-# META {
-# META   "kernel_info": {
-# META     "name": "synapse_pyspark"
-# META   },
-# META   "dependencies": {
-# META     "lakehouse": {
-# META       "default_lakehouse": "d3952fd1-aa92-4d42-84fd-a99afcc6614d",
-# META       "default_lakehouse_name": "lh_fabric_demo",
-# META       "default_lakehouse_workspace_id": "ecfcf483-666f-4267-9456-d09b370c4a12",
-# META       "known_lakehouses": [
-# META         {
-# META           "id": "d3952fd1-aa92-4d42-84fd-a99afcc6614d"
-# META         }
-# META       ]
-# META     }
-# META   }
-# META }
 
 # MARKDOWN ********************
 
@@ -29,13 +10,6 @@
 # a Delta table (full load) or a staged Parquet file (incremental load).
 # 
 # **Important:** Update `serverName` with the actual Azure SQL server FQDN before first use.
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -71,13 +45,6 @@ lakehousePath = "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric
 
 # ## Read from Azure SQL via JDBC
 # Uses Azure AD token authentication to connect to Azure SQL Database (WWI).
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -116,13 +83,6 @@ print(f"Rows read from source: {rowsRead}")
 # ## Write to Lakehouse
 # - **Full load**: Overwrite the Delta table directly with V-Order optimization
 # - **Incremental load**: Write to a Parquet staging area for downstream merge via the Create or Merge to Deltalake notebook
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
