@@ -1,7 +1,9 @@
+/// Sales analytics model sourced from Wide World Importers data via DirectLake
 model Model
 	culture: en-US
 	collation: Latin1_General_100_BIN2_UTF8
 	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
 	sourceQueryCulture: en-US
 	dataAccessOptions
 		legacyRedirects
@@ -11,7 +13,7 @@ annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_QueryOrder = ["DatabaseQuery"]
 
-annotation PBI_ProTooling = ["WebModelingEdit"]
+annotation PBI_ProTooling = ["WebModelingEdit","MCP-PBIModeling"]
 
 ref table Calendar
 ref table Customer

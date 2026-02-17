@@ -1,9 +1,11 @@
+/// Salesperson dimension table with personnel identifiers and names.
 table Salesperson
 	lineageTag: 1beb30fa-c09b-4e84-acd3-de8ab3edc3aa
 	sourceLineageTag: [Gold].[Salesperson]
 
 	column PersonID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 631593c9-48db-48de-b8d4-19f788808f2b

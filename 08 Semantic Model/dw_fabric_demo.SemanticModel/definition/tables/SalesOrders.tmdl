@@ -1,9 +1,23 @@
+/// Fact table containing sales order transactions including order value and quantity.
 table SalesOrders
 	lineageTag: e3fd8e66-d5de-4f09-98b3-dc16827015fb
 	sourceLineageTag: [Gold].[SalesOrders]
 
+	/// Sum of extended price across all sales orders
+	measure 'Total Order Value' = SUM(SalesOrders[ExtendedPrice])
+		formatString: $#,##0.00
+
+	/// Sum of quantity across all sales orders
+	measure 'Total Quantity Ordered' = SUM(SalesOrders[Quantity])
+		formatString: #,##0
+
+	/// Count of distinct orders
+	measure 'Order Count' = DISTINCTCOUNT(SalesOrders[OrderID])
+		formatString: #,##0
+
 	column OrderID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 17f1293c-9e59-4c7e-b8ca-808caf64ccd9
@@ -15,6 +29,7 @@ table SalesOrders
 
 	column OrderLineID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 1e6cf5ef-daf1-40c8-a382-e17119c83b34
@@ -26,6 +41,7 @@ table SalesOrders
 
 	column CustomerID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 056fa908-329a-4fa4-942d-ac3d09b6e200
@@ -37,6 +53,7 @@ table SalesOrders
 
 	column StockItemID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: d07e53b8-4f31-42cd-a020-f475fa01cc52
@@ -48,6 +65,7 @@ table SalesOrders
 
 	column SalespersonPersonID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: fbf16c02-3d98-4b19-9534-1c5e6fa0d5f9

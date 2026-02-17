@@ -1,6 +1,8 @@
+/// Date dimension table containing calendar attributes for time-based analysis. Covers complete contiguous date range.
 table Calendar
 	lineageTag: 9d421a19-d9e7-4be2-8689-8aa2e0068ba7
 	sourceLineageTag: [Gold].[Calendar]
+	dataCategory: Time
 
 	column Date
 		dataType: dateTime
@@ -29,13 +31,16 @@ table Calendar
 		sourceProviderType: varchar(20)
 		lineageTag: 87c69f76-d451-4ef8-8144-fe6bf00a62fe
 		sourceLineageTag: DayOfWeek
+		dataCategory: DayOfWeek
 		summarizeBy: none
 		sourceColumn: DayOfWeek
+		sortByColumn: DayOfWeekNum
 
 		annotation SummarizationSetBy = Automatic
 
 	column DayOfWeekNum
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: smallint
 		lineageTag: 3b1bbb35-9af3-444f-ba3f-f697cbc78ca9
@@ -50,13 +55,16 @@ table Calendar
 		sourceProviderType: varchar(20)
 		lineageTag: 79c13f49-7a0c-43d0-824b-401165ccdafd
 		sourceLineageTag: Month
+		dataCategory: Months
 		summarizeBy: none
 		sourceColumn: Month
+		sortByColumn: MonthNum
 
 		annotation SummarizationSetBy = Automatic
 
 	column MonthNum
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: smallint
 		lineageTag: fd73b285-d5f5-4eb8-a977-634267ce43d0
@@ -68,6 +76,7 @@ table Calendar
 
 	column QuarterNum
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: smallint
 		lineageTag: e9118f56-d51c-401e-872f-3157115fa1f3
@@ -82,8 +91,10 @@ table Calendar
 		sourceProviderType: varchar(2)
 		lineageTag: 7589e042-ee00-4e1d-98ea-c5458df209bd
 		sourceLineageTag: Quarter
+		dataCategory: QuarterOfYear
 		summarizeBy: none
 		sourceColumn: Quarter
+		sortByColumn: QuarterNum
 
 		annotation SummarizationSetBy = Automatic
 
@@ -93,6 +104,7 @@ table Calendar
 		sourceProviderType: smallint
 		lineageTag: 097c733c-8380-4735-a759-bd135622cd2f
 		sourceLineageTag: Year
+		dataCategory: Years
 		summarizeBy: none
 		sourceColumn: Year
 

@@ -1,3 +1,4 @@
+/// Customer dimension table with demographic, geographic and business attributes from Wide World Importers.
 table Customer
 	lineageTag: 104438d8-8c1f-4fcf-861a-be2f13d868bc
 	sourceLineageTag: [Gold].[Customer]
@@ -15,6 +16,7 @@ table Customer
 
 	column BuyingGroupID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 65eb2cec-721b-4eb8-93bb-1205a158c13e
@@ -49,6 +51,7 @@ table Customer
 
 	column CustomerCategoryID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 3d85ea4d-5927-434e-9108-a0de509e6624
@@ -60,6 +63,7 @@ table Customer
 
 	column CustomerID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 3b6a6baf-03b7-43d1-97ac-77d2a2284d69
@@ -81,6 +85,7 @@ table Customer
 
 	column DeliveryCityID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: eb2e24d1-467b-4c61-b889-c68d3a0ee69e

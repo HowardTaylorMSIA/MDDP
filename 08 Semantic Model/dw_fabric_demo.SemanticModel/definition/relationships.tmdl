@@ -14,7 +14,19 @@ relationship a21ab868-f6dd-24b8-6cc6-07922fb12380
 	fromColumn: InvoicedSales.SalespersonPersonID
 	toColumn: Salesperson.PersonID
 
-relationship 990db261-a916-fdd0-911b-d67e7f540ce5
-	fromColumn: InvoicedSales.StockItemID
-	toColumn: SalesOrders.StockItemID
+relationship SalesOrders_OrderDate_Calendar_Date
+	fromColumn: SalesOrders.OrderDate
+	toColumn: Calendar.Date
+
+relationship SalesOrders_CustomerID_Customer_CustomerID
+	fromColumn: SalesOrders.CustomerID
+	toColumn: Customer.CustomerID
+
+relationship SalesOrders_StockItemID_Products_StockItemID
+	fromColumn: SalesOrders.StockItemID
+	toColumn: Products.StockItemID
+
+relationship SalesOrders_SalespersonPersonID_Salesperson_PersonID
+	fromColumn: SalesOrders.SalespersonPersonID
+	toColumn: Salesperson.PersonID
 

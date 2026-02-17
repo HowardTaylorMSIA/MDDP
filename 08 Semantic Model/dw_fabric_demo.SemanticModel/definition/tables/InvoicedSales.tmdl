@@ -1,31 +1,63 @@
+/// Fact table containing invoiced sales transactions including revenue, profit, tax and quantity.
 table InvoicedSales
 	lineageTag: cbf6970b-216d-4d0a-8614-1a7bc9fd2ad3
 	sourceLineageTag: [Gold].[InvoicedSales]
 
+	/// Sum of extended price across all invoiced sales
+	measure 'Total Revenue' = SUM(InvoicedSales[ExtendedPrice])
+		formatString: $#,##0.00
+
+	/// Sum of gross profit across all invoiced sales
+	measure 'Total Gross Profit' = SUM(InvoicedSales[GrossProfit])
+		formatString: $#,##0.00
+
+	/// Sum of tax amount across all invoiced sales
+	measure 'Total Tax' = SUM(InvoicedSales[TaxAmount])
+		formatString: $#,##0.00
+
+	/// Sum of quantity across all invoiced sales
+	measure 'Total Quantity Invoiced' = SUM(InvoicedSales[Quantity])
+		formatString: #,##0
+
+	/// Count of distinct invoices
+	measure 'Invoice Count' = DISTINCTCOUNT(InvoicedSales[InvoiceID])
+		formatString: #,##0
+
+	/// Gross profit as a percentage of revenue
+	measure 'Gross Profit Margin %' = DIVIDE([Total Gross Profit], [Total Revenue], 0)
+		formatString: 0.00%
+
+	/// Average revenue per distinct invoice
+	measure 'Average Revenue per Invoice' = DIVIDE([Total Revenue], [Invoice Count], 0)
+		formatString: $#,##0.00
+
 	column InvoiceID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: ddc34db3-ce11-4bd6-a928-451014871d5b
 		sourceLineageTag: InvoiceID
-		summarizeBy: count
+		summarizeBy: none
 		sourceColumn: InvoiceID
 
 		annotation SummarizationSetBy = Automatic
 
 	column InvoiceLineID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 3e97ce9d-918e-4fce-9a8b-ba935721f4f4
 		sourceLineageTag: InvoiceLineID
-		summarizeBy: count
+		summarizeBy: none
 		sourceColumn: InvoiceLineID
 
 		annotation SummarizationSetBy = Automatic
 
 	column CustomerID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 253797bf-15fe-4329-9fe7-08db83f27c2c
@@ -37,6 +69,7 @@ table InvoicedSales
 
 	column StockItemID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 5f13f874-3c3a-42f7-a6a0-54521e553734
@@ -48,6 +81,7 @@ table InvoicedSales
 
 	column SalespersonPersonID
 		dataType: int64
+		isHidden
 		formatString: 0
 		sourceProviderType: int
 		lineageTag: 4d7b2119-445e-40a0-8c98-6f6fbb3e3ba7
