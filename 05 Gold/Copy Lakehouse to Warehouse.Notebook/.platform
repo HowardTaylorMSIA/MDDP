@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "Copy Lakehouse to Warehouse",
+    "description": "Replaces Copy Data activity - reads from lakehouse Delta table and writes to Fabric Warehouse"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6a6da163-005f-4184-af1e-e36979512e45"
+  }
+}

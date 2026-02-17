@@ -121,6 +121,13 @@
                   "batchloaddatetime": {
                     "value": "@variables('batchloaddatetime')",
                     "type": "Expression"
+                  },
+                  "NotebookVsCopydata": {
+                    "value": {
+                      "value": "@pipeline().parameters.NotebookVsCopydata",
+                      "type": "Expression"
+                    },
+                    "type": "Expression"
                   }
                 },
                 "waitOnCompletion": true,
@@ -353,6 +360,13 @@
                   "storedprocname": {
                     "value": "@item().storedprocname",
                     "type": "Expression"
+                  },
+                  "NotebookVsCopydata": {
+                    "value": {
+                      "value": "@pipeline().parameters.NotebookVsCopydata",
+                      "type": "Expression"
+                    },
+                    "type": "Expression"
                   }
                 },
                 "waitOnCompletion": true,
@@ -414,6 +428,10 @@
       "vacuum_retention_hours": {
         "type": "int",
         "defaultValue": 168
+      },
+      "NotebookVsCopydata": {
+        "type": "int",
+        "defaultValue": 1
       }
     },
     "variables": {

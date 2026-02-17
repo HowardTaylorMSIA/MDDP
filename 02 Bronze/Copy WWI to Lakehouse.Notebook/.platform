@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "Copy WWI to Lakehouse",
+    "description": "Replaces Copy Data activity - reads from Azure SQL via JDBC and writes to lakehouse as Delta or Parquet"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ba5ce88b-68f3-4667-8653-cf3b7ca07de4"
+  }
+}

@@ -26,91 +26,244 @@
           },
           "ifTrueActivities": [
             {
-              "type": "Copy",
+              "type": "IfCondition",
               "typeProperties": {
-                "source": {
-                  "type": "DataWarehouseSource",
-                  "sqlReaderQuery": {
-                    "value": "SELECT * FROM @{pipeline().parameters.sourceschema}.@{pipeline().parameters.sourcetable}",
-                    "type": "Expression"
-                  },
-                  "partitionOption": "None",
-                  "queryTimeout": "02:00:00",
-                  "datasetSettings": {
-                    "type": "DataWarehouseTable",
-                    "schema": [],
-                    "connectionSettings": {
-                      "name": "lh_fabric_demo",
-                      "properties": {
-                        "type": "Lakehouse",
-                        "typeProperties": {
-                          "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
-                          "workspaceId": "00000000-0000-0000-0000-000000000000"
-                        },
-                        "externalReferences": {
-                          "connection": "da12d4e7-41bf-42b1-81f9-e8f8732fde1d"
-                        },
-                        "annotations": []
-                      }
-                    },
-                    "annotations": []
-                  }
+                "expression": {
+                  "value": "@equals(pipeline().parameters.NotebookVsCopydata,1)",
+                  "type": "Expression"
                 },
-                "sink": {
-                  "type": "DataWarehouseSink",
-                  "preCopyScript": "DELETE FROM @{pipeline().parameters.sinkschema}.@{pipeline().parameters.sinktable}",
-                  "allowCopyCommand": true,
-                  "copyCommandSettings": {},
-                  "disableMetricsCollection": false,
-                  "datasetSettings": {
-                    "type": "DataWarehouseTable",
+                "ifTrueActivities": [
+                  {
+                    "type": "TridentNotebook",
                     "typeProperties": {
-                      "schema": {
-                        "value": "@pipeline().parameters.sinkschema",
+                      "notebookId": "6a6da163-005f-4184-af1e-e36979512e45",
+                      "workspaceId": "00000000-0000-0000-0000-000000000000",
+                      "parameters": {
+                        "sourceSchema": {
+                          "value": {
+                            "value": "@pipeline().parameters.sourceschema",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        },
+                        "sourceTable": {
+                          "value": {
+                            "value": "@pipeline().parameters.sourcetable",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        },
+                        "sinkSchema": {
+                          "value": {
+                            "value": "@pipeline().parameters.sinkschema",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        },
+                        "sinkTable": {
+                          "value": {
+                            "value": "@pipeline().parameters.sinktable",
+                            "type": "Expression"
+                          },
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 2,
+                      "retryIntervalInSeconds": 60,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Copy to Warehouse via Notebook",
+                    "dependsOn": []
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "copyStatus",
+                      "value": {
+                        "value": "@split(split(activity('Copy to Warehouse via Notebook').output.result.exitValue,';;')[0],'=')[1]",
                         "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set copyStatus NB WH",
+                    "dependsOn": [
+                      {
+                        "activity": "Copy to Warehouse via Notebook",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "sourceRowsCopied",
+                      "value": {
+                        "value": "@split(split(activity('Copy to Warehouse via Notebook').output.result.exitValue,';;')[1],'=')[1]",
+                        "type": "Expression"
+                      }
+                    },
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set sourceRowsCopied NB WH",
+                    "dependsOn": [
+                      {
+                        "activity": "Set copyStatus NB WH",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "ifFalseActivities": [
+                  {
+                    "type": "Copy",
+                    "typeProperties": {
+                      "source": {
+                        "type": "DataWarehouseSource",
+                        "sqlReaderQuery": {
+                          "value": "SELECT * FROM @{pipeline().parameters.sourceschema}.@{pipeline().parameters.sourcetable}",
+                          "type": "Expression"
+                        },
+                        "partitionOption": "None",
+                        "queryTimeout": "02:00:00",
+                        "datasetSettings": {
+                          "type": "DataWarehouseTable",
+                          "schema": [],
+                          "connectionSettings": {
+                            "name": "lh_fabric_demo",
+                            "properties": {
+                              "type": "Lakehouse",
+                              "typeProperties": {
+                                "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
+                                "workspaceId": "00000000-0000-0000-0000-000000000000"
+                              },
+                              "externalReferences": {
+                                "connection": "da12d4e7-41bf-42b1-81f9-e8f8732fde1d"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
                       },
-                      "table": {
-                        "value": "@pipeline().parameters.sinktable",
+                      "sink": {
+                        "type": "DataWarehouseSink",
+                        "preCopyScript": "DELETE FROM @{pipeline().parameters.sinkschema}.@{pipeline().parameters.sinktable}",
+                        "allowCopyCommand": true,
+                        "copyCommandSettings": {},
+                        "disableMetricsCollection": false,
+                        "datasetSettings": {
+                          "type": "DataWarehouseTable",
+                          "typeProperties": {
+                            "schema": {
+                              "value": "@pipeline().parameters.sinkschema",
+                              "type": "Expression"
+                            },
+                            "table": {
+                              "value": "@pipeline().parameters.sinktable",
+                              "type": "Expression"
+                            }
+                          },
+                          "schema": [],
+                          "connectionSettings": {
+                            "name": "dw_fabric_demo",
+                            "properties": {
+                              "type": "DataWarehouse",
+                              "typeProperties": {
+                                "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
+                                "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
+                                "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
+                              },
+                              "externalReferences": {
+                                "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "annotations": []
+                        }
+                      },
+                      "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                          "allowDataTruncation": true,
+                          "treatBooleanAsNumber": false
+                        }
+                      },
+                      "enableStaging": true
+                    },
+                    "policy": {
+                      "timeout": "0.12:00:00",
+                      "retry": 2,
+                      "retryIntervalInSeconds": 60,
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Copy data to warehouse",
+                    "dependsOn": []
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "copyStatus",
+                      "value": {
+                        "value": "@activity('Copy data to warehouse').output.executionDetails[0].status",
                         "type": "Expression"
                       }
                     },
-                    "schema": [],
-                    "connectionSettings": {
-                      "name": "dw_fabric_demo",
-                      "properties": {
-                        "type": "DataWarehouse",
-                        "typeProperties": {
-                          "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
-                          "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
-                          "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
-                        },
-                        "externalReferences": {
-                          "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
-                        },
-                        "annotations": []
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set copyStatus Copy WH",
+                    "dependsOn": [
+                      {
+                        "activity": "Copy data to warehouse",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "SetVariable",
+                    "typeProperties": {
+                      "variableName": "sourceRowsCopied",
+                      "value": {
+                        "value": "@string(activity('Copy data to warehouse').output.rowsCopied)",
+                        "type": "Expression"
                       }
                     },
-                    "annotations": []
+                    "policy": {
+                      "secureInput": false,
+                      "secureOutput": false
+                    },
+                    "name": "Set sourceRowsCopied Copy WH",
+                    "dependsOn": [
+                      {
+                        "activity": "Set copyStatus Copy WH",
+                        "dependencyConditions": [
+                          "Succeeded"
+                        ]
+                      }
+                    ]
                   }
-                },
-                "translator": {
-                  "type": "TabularTranslator",
-                  "typeConversion": true,
-                  "typeConversionSettings": {
-                    "allowDataTruncation": true,
-                    "treatBooleanAsNumber": false
-                  }
-                },
-                "enableStaging": true
+                ]
               },
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 2,
-                "retryIntervalInSeconds": 60,
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Copy data to warehouse",
+              "name": "Use Notebook or Copy WH",
               "dependsOn": []
             },
             {
@@ -129,7 +282,7 @@
               "name": "Set pipeline endtime",
               "dependsOn": [
                 {
-                  "activity": "Copy data to warehouse",
+                  "activity": "Use Notebook or Copy WH",
                   "dependencyConditions": [
                     "Succeeded"
                   ]
@@ -142,7 +295,7 @@
                 "scripts": [
                   {
                     "text": {
-                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{activity('Copy data to warehouse').output.executionDetails[0].status}',  rowsinserted= @{activity('Copy data to warehouse').output.rowsCopied}, rowsupdated=0, pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
+                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{variables('copyStatus')}',  rowsinserted= @{variables('sourceRowsCopied')}, rowsupdated=0, pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
                       "type": "Expression"
                     },
                     "type": "NonQuery"
@@ -219,7 +372,7 @@
               "name": "Log Full Load Failure",
               "dependsOn": [
                 {
-                  "activity": "Copy data to warehouse",
+                  "activity": "Use Notebook or Copy WH",
                   "dependencyConditions": [
                     "Failed"
                   ]
@@ -444,6 +597,10 @@
       },
       "storedprocname": {
         "type": "string"
+      },
+      "NotebookVsCopydata": {
+        "type": "int",
+        "defaultValue": 1
       }
     },
     "variables": {
@@ -451,6 +608,12 @@
         "type": "String"
       },
       "pipelineendtime": {
+        "type": "String"
+      },
+      "copyStatus": {
+        "type": "String"
+      },
+      "sourceRowsCopied": {
         "type": "String"
       }
     }
