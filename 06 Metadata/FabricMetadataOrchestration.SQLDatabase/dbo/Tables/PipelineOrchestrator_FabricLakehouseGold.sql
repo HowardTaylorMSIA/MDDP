@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[PipelineOrchestrator_FabricLakehouseGold] (
     [batchloaddatetime] DATETIME2 (7)  NULL,
     [loadstatus]        NVARCHAR (15)  NULL,
     [rowsread]          INT            NULL,
-    [rowscopied]        INT            NULL,
+    [rowscopied]        NCHAR (10)     NULL,
     [deltalakeupdated]  INT            NULL,
     [deltalakeinserted] INT            NULL,
     [sinkmaxdatetime]   DATETIME2 (7)  NULL,
