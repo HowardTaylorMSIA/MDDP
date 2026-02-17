@@ -1,0 +1,20 @@
+relationship 4dd262ed-0ef6-2b9e-d603-0b2a9d6275cc
+	fromColumn: InvoicedSales.CustomerID
+	toColumn: Customer.CustomerID
+
+relationship de025f24-681b-3b35-52ce-d7e06d439fdc
+	fromColumn: InvoicedSales.InvoiceDate
+	toColumn: Calendar.Date
+
+relationship c916ba9e-ef05-371e-a5e3-fc4a528244ac
+	fromColumn: InvoicedSales.StockItemID
+	toColumn: Products.StockItemID
+
+relationship a21ab868-f6dd-24b8-6cc6-07922fb12380
+	fromColumn: InvoicedSales.SalespersonPersonID
+	toColumn: Salesperson.PersonID
+
+relationship 990db261-a916-fdd0-911b-d67e7f540ce5
+	fromColumn: InvoicedSales.StockItemID
+	toColumn: SalesOrders.StockItemID
+

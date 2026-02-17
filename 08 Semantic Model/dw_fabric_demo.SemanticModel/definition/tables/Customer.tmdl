@@ -1,0 +1,213 @@
+table Customer
+	lineageTag: 104438d8-8c1f-4fcf-861a-be2f13d868bc
+	sourceLineageTag: [Gold].[Customer]
+
+	column YearsCustomer
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3d19b073-9798-4c65-be3a-95c07309d494
+		sourceLineageTag: YearsCustomer
+		summarizeBy: none
+		sourceColumn: YearsCustomer
+
+		annotation SummarizationSetBy = Automatic
+
+	column BuyingGroupID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 65eb2cec-721b-4eb8-93bb-1205a158c13e
+		sourceLineageTag: BuyingGroupID
+		summarizeBy: none
+		sourceColumn: BuyingGroupID
+
+		annotation SummarizationSetBy = Automatic
+
+	column BuyingGroupName
+		dataType: string
+		sourceProviderType: varchar(50)
+		lineageTag: 534fd7e0-2270-4f93-83bf-f1c8d19d2ba7
+		sourceLineageTag: BuyingGroupName
+		summarizeBy: none
+		sourceColumn: BuyingGroupName
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreditLimit
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		sourceProviderType: decimal(10, 2)
+		lineageTag: 4a9c9c88-344f-4f14-9ba7-8581c28ee9a3
+		sourceLineageTag: CreditLimit
+		summarizeBy: none
+		sourceColumn: CreditLimit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column CustomerCategoryID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3d85ea4d-5927-434e-9108-a0de509e6624
+		sourceLineageTag: CustomerCategoryID
+		summarizeBy: none
+		sourceColumn: CustomerCategoryID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3b6a6baf-03b7-43d1-97ac-77d2a2284d69
+		sourceLineageTag: CustomerID
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerName
+		dataType: string
+		sourceProviderType: varchar(100)
+		lineageTag: fbbd57c4-9d7f-4f14-b3ac-bb9f2e2406af
+		sourceLineageTag: CustomerName
+		summarizeBy: none
+		sourceColumn: CustomerName
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryCityID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: eb2e24d1-467b-4c61-b889-c68d3a0ee69e
+		sourceLineageTag: DeliveryCityID
+		summarizeBy: none
+		sourceColumn: DeliveryCityID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryCity
+		dataType: string
+		sourceProviderType: varchar(50)
+		lineageTag: ddbe68a2-17c1-4a82-8164-4ce9aecbca68
+		sourceLineageTag: DeliveryCity
+		summarizeBy: none
+		sourceColumn: DeliveryCity
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryStateProvince
+		dataType: string
+		sourceProviderType: varchar(50)
+		lineageTag: 4aaec062-67ca-45be-a343-b6b5d690b553
+		sourceLineageTag: DeliveryStateProvince
+		summarizeBy: none
+		sourceColumn: DeliveryStateProvince
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryCountry
+		dataType: string
+		sourceProviderType: varchar(60)
+		lineageTag: 9d175447-e401-4bb6-bd6f-c7a343d6e725
+		sourceLineageTag: DeliveryCountry
+		summarizeBy: none
+		sourceColumn: DeliveryCountry
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 5e601b5e-ddbe-4153-8b23-d0b53d8b0899
+		sourceLineageTag: Region
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subregion
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: 174534a7-25d4-4900-b657-8c626026b223
+		sourceLineageTag: Subregion
+		summarizeBy: none
+		sourceColumn: Subregion
+
+		annotation SummarizationSetBy = Automatic
+
+	column Continent
+		dataType: string
+		sourceProviderType: varchar(30)
+		lineageTag: c1107f36-b0d0-4ee3-be9d-4bd5beb07733
+		sourceLineageTag: Continent
+		summarizeBy: none
+		sourceColumn: Continent
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesTerritory
+		dataType: string
+		sourceProviderType: varchar(50)
+		lineageTag: a86e5d08-8af6-40f7-bf48-89bf45b197df
+		sourceLineageTag: SalesTerritory
+		summarizeBy: none
+		sourceColumn: SalesTerritory
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeliveryPostalCode
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 5652e54e-62e3-40b8-b77e-988011ae281e
+		sourceLineageTag: DeliveryPostalCode
+		summarizeBy: none
+		sourceColumn: DeliveryPostalCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsOnCreditHold
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: 5f528820-0f92-4662-b2a0-14f1160367bb
+		sourceLineageTag: IsOnCreditHold
+		summarizeBy: none
+		sourceColumn: IsOnCreditHold
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaymentDays
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c576f591-a2f9-476a-b453-5c287fc75733
+		sourceLineageTag: PaymentDays
+		summarizeBy: none
+		sourceColumn: PaymentDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column AreaCode
+		dataType: string
+		sourceProviderType: varchar(3)
+		lineageTag: 4467b0ca-6ed9-4079-96ed-81996597275b
+		sourceLineageTag: AreaCode
+		summarizeBy: none
+		sourceColumn: AreaCode
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customer = entity
+		mode: directLake
+		source
+			entityName: Customer
+			schemaName: Gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

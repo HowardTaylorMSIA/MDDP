@@ -1,0 +1,109 @@
+table Calendar
+	lineageTag: 9d421a19-d9e7-4be2-8689-8aa2e0068ba7
+	sourceLineageTag: [Gold].[Calendar]
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: e2d97c14-1a56-441e-8216-70ef617c594e
+		sourceLineageTag: Date
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayNum
+		dataType: int64
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: e52b13ca-e718-4444-a93b-de76a65b13e3
+		sourceLineageTag: DayNum
+		summarizeBy: none
+		sourceColumn: DayNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeek
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 87c69f76-d451-4ef8-8144-fe6bf00a62fe
+		sourceLineageTag: DayOfWeek
+		summarizeBy: none
+		sourceColumn: DayOfWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeekNum
+		dataType: int64
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: 3b1bbb35-9af3-444f-ba3f-f697cbc78ca9
+		sourceLineageTag: DayOfWeekNum
+		summarizeBy: none
+		sourceColumn: DayOfWeekNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 79c13f49-7a0c-43d0-824b-401165ccdafd
+		sourceLineageTag: Month
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNum
+		dataType: int64
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: fd73b285-d5f5-4eb8-a977-634267ce43d0
+		sourceLineageTag: MonthNum
+		summarizeBy: none
+		sourceColumn: MonthNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column QuarterNum
+		dataType: int64
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: e9118f56-d51c-401e-872f-3157115fa1f3
+		sourceLineageTag: QuarterNum
+		summarizeBy: none
+		sourceColumn: QuarterNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		sourceProviderType: varchar(2)
+		lineageTag: 7589e042-ee00-4e1d-98ea-c5458df209bd
+		sourceLineageTag: Quarter
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: 097c733c-8380-4735-a759-bd135622cd2f
+		sourceLineageTag: Year
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendar = entity
+		mode: directLake
+		source
+			entityName: Calendar
+			schemaName: Gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,137 @@
+table InvoicedSales
+	lineageTag: cbf6970b-216d-4d0a-8614-1a7bc9fd2ad3
+	sourceLineageTag: [Gold].[InvoicedSales]
+
+	column InvoiceID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ddc34db3-ce11-4bd6-a928-451014871d5b
+		sourceLineageTag: InvoiceID
+		summarizeBy: count
+		sourceColumn: InvoiceID
+
+		annotation SummarizationSetBy = Automatic
+
+	column InvoiceLineID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3e97ce9d-918e-4fce-9a8b-ba935721f4f4
+		sourceLineageTag: InvoiceLineID
+		summarizeBy: count
+		sourceColumn: InvoiceLineID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 253797bf-15fe-4329-9fe7-08db83f27c2c
+		sourceLineageTag: CustomerID
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 5f13f874-3c3a-42f7-a6a0-54521e553734
+		sourceLineageTag: StockItemID
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalespersonPersonID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4d7b2119-445e-40a0-8c98-6f6fbb3e3ba7
+		sourceLineageTag: SalespersonPersonID
+		summarizeBy: none
+		sourceColumn: SalespersonPersonID
+
+		annotation SummarizationSetBy = Automatic
+
+	column InvoiceDate
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: ae645d7a-65bf-4a3f-a57b-4d38538cfb0c
+		sourceLineageTag: InvoiceDate
+		summarizeBy: none
+		sourceColumn: InvoiceDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastUpdated
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 624d5e67-b811-481b-a356-7a77e052c573
+		sourceLineageTag: LastUpdated
+		summarizeBy: none
+		sourceColumn: LastUpdated
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: dc2359eb-7609-4b05-af6f-380de912af31
+		sourceLineageTag: Quantity
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExtendedPrice
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 8a453e63-bcb8-4a74-9431-80cb79480bd9
+		sourceLineageTag: ExtendedPrice
+		summarizeBy: sum
+		sourceColumn: ExtendedPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GrossProfit
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: d264ce80-49ff-429f-9ec2-f27e80038913
+		sourceLineageTag: GrossProfit
+		summarizeBy: sum
+		sourceColumn: GrossProfit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TaxAmount
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 603f865f-0f56-4a4c-a0ec-79da6f51ab19
+		sourceLineageTag: TaxAmount
+		summarizeBy: sum
+		sourceColumn: TaxAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition InvoicedSales = entity
+		mode: directLake
+		source
+			entityName: InvoicedSales
+			schemaName: Gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

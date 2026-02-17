@@ -1,0 +1,86 @@
+table Products
+	lineageTag: 807d838a-5f57-44af-9b53-d790106e8b15
+	sourceLineageTag: [Gold].[Products]
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 8f8acd77-ebbd-48c1-b74d-04e15bc9f588
+		sourceLineageTag: StockItemID
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockItemName
+		dataType: string
+		sourceProviderType: varchar(100)
+		lineageTag: 6f6b6574-71b7-484c-ae41-5323d55abcbd
+		sourceLineageTag: StockItemName
+		summarizeBy: none
+		sourceColumn: StockItemName
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4aef82c1-86e8-4973-8e68-965ed1c85175
+		sourceLineageTag: SupplierID
+		summarizeBy: none
+		sourceColumn: SupplierID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierName
+		dataType: string
+		sourceProviderType: varchar(100)
+		lineageTag: 6aca4e10-21cc-40dc-8d75-b1e5ec09d377
+		sourceLineageTag: SupplierName
+		summarizeBy: none
+		sourceColumn: SupplierName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: a1d43f7c-9f1d-45f9-aade-65d49ebaa60e
+		sourceLineageTag: Brand
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColorName
+		dataType: string
+		sourceProviderType: varchar(20)
+		lineageTag: 60056120-31b3-4d92-b951-9639d37a7767
+		sourceLineageTag: ColorName
+		summarizeBy: none
+		sourceColumn: ColorName
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimeDays
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 429ab6a6-89d2-4b51-bb07-2871a204b50e
+		sourceLineageTag: LeadTimeDays
+		summarizeBy: none
+		sourceColumn: LeadTimeDays
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Products = entity
+		mode: directLake
+		source
+			entityName: Products
+			schemaName: Gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

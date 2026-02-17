@@ -1,0 +1,34 @@
+table Salesperson
+	lineageTag: 1beb30fa-c09b-4e84-acd3-de8ab3edc3aa
+	sourceLineageTag: [Gold].[Salesperson]
+
+	column PersonID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 631593c9-48db-48de-b8d4-19f788808f2b
+		sourceLineageTag: PersonID
+		summarizeBy: none
+		sourceColumn: PersonID
+
+		annotation SummarizationSetBy = Automatic
+
+	column FullName
+		dataType: string
+		sourceProviderType: varchar(50)
+		lineageTag: 3d32b554-8389-47b3-b3d6-123389f25cbb
+		sourceLineageTag: FullName
+		summarizeBy: none
+		sourceColumn: FullName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Salesperson = entity
+		mode: directLake
+		source
+			entityName: Salesperson
+			schemaName: Gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,113 @@
+table SalesOrders
+	lineageTag: e3fd8e66-d5de-4f09-98b3-dc16827015fb
+	sourceLineageTag: [Gold].[SalesOrders]
+
+	column OrderID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 17f1293c-9e59-4c7e-b8ca-808caf64ccd9
+		sourceLineageTag: OrderID
+		summarizeBy: none
+		sourceColumn: OrderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderLineID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 1e6cf5ef-daf1-40c8-a382-e17119c83b34
+		sourceLineageTag: OrderLineID
+		summarizeBy: none
+		sourceColumn: OrderLineID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 056fa908-329a-4fa4-942d-ac3d09b6e200
+		sourceLineageTag: CustomerID
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d07e53b8-4f31-42cd-a020-f475fa01cc52
+		sourceLineageTag: StockItemID
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalespersonPersonID
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fbf16c02-3d98-4b19-9534-1c5e6fa0d5f9
+		sourceLineageTag: SalespersonPersonID
+		summarizeBy: none
+		sourceColumn: SalespersonPersonID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDate
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: d36301a0-436f-49d4-aaf8-299fe654d1a4
+		sourceLineageTag: OrderDate
+		summarizeBy: none
+		sourceColumn: OrderDate
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 3c80773b-322f-43a7-80c0-af98b866c307
+		sourceLineageTag: Quantity
+		summarizeBy: none
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExtendedPrice
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 8c3c2c74-8e07-40b6-a326-1a2bab4c2d9c
+		sourceLineageTag: ExtendedPrice
+		summarizeBy: none
+		sourceColumn: ExtendedPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LastUpdated
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetime2
+		lineageTag: 1c4730ef-8972-4ead-80be-57fb9aa5ceec
+		sourceLineageTag: LastUpdated
+		summarizeBy: none
+		sourceColumn: LastUpdated
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SalesOrders = entity
+		mode: directLake
+		source
+			entityName: SalesOrders
+			schemaName: Gold
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+
