@@ -1,55 +1,90 @@
-----
-
-
-CREATE         PROC [Gold].[IncrLoadSalesOrders]
-
-@StartDate DATETIME,
-@EndDate DATETIME
+/*
+================================================================================
+  Procedure : Gold.IncrLoadSalesOrders
+  Purpose   : Incrementally load SalesOrders from lakehouse Silver view to
+              warehouse Gold table using UPDATE-then-INSERT pattern.
+  Parameters:
+      @StartDate DATETIME - Lower bound for LastUpdated filter (inclusive).
+                            NULL = auto-detect from MAX(LastUpdated) in target.
+      @EndDate   DATETIME - Upper bound for LastUpdated filter (inclusive).
+                            NULL = defaults to 9999-12-31 (no upper bound).
+  Returns   : Single-row result set with UpdateCount, InsertCount, MaxDate.
+================================================================================
+*/
+CREATE PROC [Gold].[IncrLoadSalesOrders]
+    @StartDate DATETIME,
+    @EndDate   DATETIME
 AS
 BEGIN
+    SET NOCOUNT ON;
 
-SET NOCOUNT ON;
+    DECLARE @UpdateCount INT, @InsertCount INT;
 
-DECLARE @UpdateCount INT, @InsertCount INT
--- exec [Gold].[IncrLoadSalesOrders] null, null 
+    -- Default @StartDate to the current high-watermark in the target table
+    IF @StartDate IS NULL
+    BEGIN
+        SELECT @StartDate = ISNULL(MAX(LastUpdated), '2013-01-01')
+        FROM [dw_fabric_demo].[Gold].[SalesOrders];
+    END;
 
-IF @StartDate IS NULL
-BEGIN
-    SELECT @StartDate = isnull(MAX(LastUpdated),'2013-01-01') 
-    FROM [dw_fabric_demo].[Gold].[SalesOrders]
-END;
+    -- Default @EndDate to far-future (no upper bound)
+    IF @EndDate IS NULL
+    BEGIN
+        SET @EndDate = '9999-12-31';
+    END;
 
-IF @EndDate IS NULL
-BEGIN
-    SET @EndDate = '9999-12-31'
-END  
-
-UPDATE target
-SET target.OrderDate = source.OrderDate,
-            target.CustomerID = source.CustomerID,
-            target.StockItemID = source.StockItemID,
-            target.SalespersonPersonID = source.SalespersonPersonID,
-            target.ExtendedPrice = source.ExtendedPrice,
-            target.Quantity = source.Quantity,
-            target.LastUpdated = source.LastUpdated
-FROM [dw_fabric_demo].[Gold].[SalesOrders] AS target
+    --------------------------------------------------------------------------
+    -- Step 1: UPDATE existing rows that have changed in the source
+    --------------------------------------------------------------------------
+    UPDATE target
+    SET target.OrderDate           = source.OrderDate,
+        target.CustomerID          = source.CustomerID,
+        target.StockItemID         = source.StockItemID,
+        target.SalespersonPersonID = source.SalespersonPersonID,
+        target.ExtendedPrice       = source.ExtendedPrice,
+        target.Quantity            = source.Quantity,
+        target.LastUpdated         = source.LastUpdated
+    FROM [dw_fabric_demo].[Gold].[SalesOrders] AS target
     INNER JOIN [lh_fabric_demo].[Silver].[vSalesOrders] AS source
-    ON (target.OrderID = source.OrderID AND target.OrderLineID = source.OrderLineID)
-    WHERE source.LastUpdated BETWEEN @StartDate and @EndDate;
+        ON  target.OrderID     = source.OrderID
+        AND target.OrderLineID = source.OrderLineID
+    WHERE source.LastUpdated >= @StartDate
+      AND source.LastUpdated <= @EndDate;
 
-SELECT @UpdateCount = @@ROWCOUNT   
+    SET @UpdateCount = @@ROWCOUNT;
 
-INSERT INTO [dw_fabric_demo].[Gold].[SalesOrders] (OrderID, OrderLineID, OrderDate, CustomerID, StockItemID, SalespersonPersonID, 
-            ExtendedPrice, Quantity, LastUpdated)
-    SELECT source.OrderID, source.OrderLineID, source.OrderDate, source.CustomerID, source.StockItemID, source.SalespersonPersonID,
-            source.ExtendedPrice, source.Quantity, source.LastUpdated
+    --------------------------------------------------------------------------
+    -- Step 2: INSERT rows that exist in source but not yet in target
+    --------------------------------------------------------------------------
+    INSERT INTO [dw_fabric_demo].[Gold].[SalesOrders]
+        (OrderID, OrderLineID, OrderDate, CustomerID, StockItemID,
+         SalespersonPersonID, ExtendedPrice, Quantity, LastUpdated)
+    SELECT
+        source.OrderID,
+        source.OrderLineID,
+        source.OrderDate,
+        source.CustomerID,
+        source.StockItemID,
+        source.SalespersonPersonID,
+        source.ExtendedPrice,
+        source.Quantity,
+        source.LastUpdated
     FROM [lh_fabric_demo].[Silver].[vSalesOrders] AS source
     LEFT JOIN [dw_fabric_demo].[Gold].[SalesOrders] AS target
-    ON (target.OrderID = source.OrderID AND target.OrderLineID = source.OrderLineID)
-    WHERE target.OrderID IS NULL AND target.OrderLineID IS NULL AND source.LastUpdated BETWEEN @StartDate and @EndDate;
+        ON  target.OrderID     = source.OrderID
+        AND target.OrderLineID = source.OrderLineID
+    WHERE target.OrderID IS NULL
+      AND source.LastUpdated >= @StartDate
+      AND source.LastUpdated <= @EndDate;
 
-SELECT @InsertCount = @@ROWCOUNT;
+    SET @InsertCount = @@ROWCOUNT;
 
-SELECT @UpdateCount as UpdateCount, @InsertCount as InsertCount, (SELECT MAX(LastUpdated) FROM [dw_fabric_demo].[Gold].[SalesOrders]) as MaxDate;
-
-END
+    --------------------------------------------------------------------------
+    -- Step 3: Return execution metrics
+    --------------------------------------------------------------------------
+    SELECT
+        @UpdateCount AS UpdateCount,
+        @InsertCount AS InsertCount,
+        (SELECT MAX(LastUpdated)
+         FROM [dw_fabric_demo].[Gold].[SalesOrders]) AS MaxDate;
+END;

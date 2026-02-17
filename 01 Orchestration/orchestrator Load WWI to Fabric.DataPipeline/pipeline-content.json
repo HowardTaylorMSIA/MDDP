@@ -72,7 +72,7 @@
         "type": "ForEach",
         "typeProperties": {
           "isSequential": false,
-          "batchCount": 2,
+          "batchCount": 3,
           "items": {
             "value": "@activity('Get tables to load to deltalake').output.value",
             "type": "Expression"
@@ -193,7 +193,8 @@
               "name": "Build Calendar Notebook",
               "dependsOn": []
             }
-          ]
+          ],
+          "ifFalseActivities": []
         },
         "name": "Build Calendar",
         "dependsOn": [
@@ -238,7 +239,8 @@
               "name": "Optimize Lakehouse Tables Notebook",
               "dependsOn": []
             }
-          ]
+          ],
+          "ifFalseActivities": []
         },
         "name": "Optimize Lakehouse Tables",
         "dependsOn": [
@@ -316,15 +318,42 @@
                     "value": "@item().sourcestartdate",
                     "type": "Expression"
                   },
-                  "sourceenddate": "@item().sourceenddate",
-                  "sourceschema": "@item().sourceschema",
-                  "sourcetable": "@item().sourcetable",
-                  "sinkschema": "@item().sinkschema",
-                  "loadtype": "@item().loadtype",
-                  "batchloaddatetime": "@variables('batchloaddatetime')",
-                  "sinktable": "@item().sinktable",
-                  "storedprocschema": "@item().storedprocschema",
-                  "storedprocname": "@item().storedprocname"
+                  "sourceenddate": {
+                    "value": "@item().sourceenddate",
+                    "type": "Expression"
+                  },
+                  "sourceschema": {
+                    "value": "@item().sourceschema",
+                    "type": "Expression"
+                  },
+                  "sourcetable": {
+                    "value": "@item().sourcetable",
+                    "type": "Expression"
+                  },
+                  "sinkschema": {
+                    "value": "@item().sinkschema",
+                    "type": "Expression"
+                  },
+                  "loadtype": {
+                    "value": "@item().loadtype",
+                    "type": "Expression"
+                  },
+                  "batchloaddatetime": {
+                    "value": "@variables('batchloaddatetime')",
+                    "type": "Expression"
+                  },
+                  "sinktable": {
+                    "value": "@item().sinktable",
+                    "type": "Expression"
+                  },
+                  "storedprocschema": {
+                    "value": "@item().storedprocschema",
+                    "type": "Expression"
+                  },
+                  "storedprocname": {
+                    "value": "@item().storedprocname",
+                    "type": "Expression"
+                  }
                 },
                 "waitOnCompletion": true,
                 "workspaceId": "00000000-0000-0000-0000-000000000000",
