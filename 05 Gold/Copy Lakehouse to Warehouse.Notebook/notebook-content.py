@@ -1,24 +1,5 @@
 # Fabric notebook source
 
-# METADATA ********************
-
-# META {
-# META   "kernel_info": {
-# META     "name": "synapse_pyspark"
-# META   },
-# META   "dependencies": {
-# META     "lakehouse": {
-# META       "default_lakehouse": "d3952fd1-aa92-4d42-84fd-a99afcc6614d",
-# META       "default_lakehouse_name": "lh_fabric_demo",
-# META       "default_lakehouse_workspace_id": "ecfcf483-666f-4267-9456-d09b370c4a12",
-# META       "known_lakehouses": [
-# META         {
-# META           "id": "d3952fd1-aa92-4d42-84fd-a99afcc6614d"
-# META         }
-# META       ]
-# META     }
-# META   }
-# META }
 
 # MARKDOWN ********************
 
@@ -27,13 +8,6 @@
 # Replaces the Copy Data activity in the Load Warehouse Table pipeline.
 # Reads from a lakehouse Delta table and writes to a Fabric Warehouse table.
 # Performs a DELETE + INSERT pattern for full load replacement.
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -65,13 +39,6 @@ sinkTable = "InvoicedSales"
 # ## Read from Lakehouse
 # Read the source table from the default lakehouse (lh_fabric_demo).
 
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
-
 # CELL ********************
 
 # Read the source table from the lakehouse
@@ -94,13 +61,6 @@ print(f"Rows read from lakehouse: {rowsCopied}")
 # ## Write to Warehouse
 # Delete existing rows and insert new data into the warehouse Gold schema table.
 # Uses cross-database queries with the attached warehouse resource.
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
