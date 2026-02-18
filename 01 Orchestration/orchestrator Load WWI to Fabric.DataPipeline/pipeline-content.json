@@ -123,10 +123,7 @@
                     "type": "Expression"
                   },
                   "NotebookVsCopydata": {
-                    "value": {
-                      "value": "@pipeline().parameters.NotebookVsCopydata",
-                      "type": "Expression"
-                    },
+                    "value": "@pipeline().parameters.NotebookVsCopydata",
                     "type": "Expression"
                   }
                 },
@@ -362,10 +359,7 @@
                     "type": "Expression"
                   },
                   "NotebookVsCopydata": {
-                    "value": {
-                      "value": "@pipeline().parameters.NotebookVsCopydata",
-                      "type": "Expression"
-                    },
+                    "value": "@pipeline().parameters.NotebookVsCopydata",
                     "type": "Expression"
                   }
                 },
