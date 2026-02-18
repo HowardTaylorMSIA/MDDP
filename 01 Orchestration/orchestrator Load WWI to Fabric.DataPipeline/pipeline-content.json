@@ -424,8 +424,8 @@
         "defaultValue": 168
       },
       "NotebookVsCopydata": {
-        "type": "int",
-        "defaultValue": 1
+        "type": "string",
+        "defaultValue": "1"
       }
     },
     "variables": {
