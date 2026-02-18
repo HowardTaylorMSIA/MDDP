@@ -1,24 +1,5 @@
 # Fabric notebook source
 
-# METADATA ********************
-
-# META {
-# META   "kernel_info": {
-# META     "name": "synapse_pyspark"
-# META   },
-# META   "dependencies": {
-# META     "lakehouse": {
-# META       "default_lakehouse": "d3952fd1-aa92-4d42-84fd-a99afcc6614d",
-# META       "default_lakehouse_name": "lh_fabric_demo",
-# META       "default_lakehouse_workspace_id": "ecfcf483-666f-4267-9456-d09b370c4a12",
-# META       "known_lakehouses": [
-# META         {
-# META           "id": "d3952fd1-aa92-4d42-84fd-a99afcc6614d"
-# META         }
-# META       ]
-# META     }
-# META   }
-# META }
 
 # MARKDOWN ********************
 
@@ -32,13 +13,6 @@
 # `Gold.IncrLoadSalesOrders`) but implemented in PySpark / Spark SQL.
 # 
 # **Source view convention:** `lh_fabric_demo.Silver.v{sinkTable}` (e.g. `vInvoicedSales`)
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -72,13 +46,6 @@ keyColumns = ""
 # Key columns are used for matching source and target rows during the incremental merge.
 # If not provided via the `keyColumns` parameter, a built-in mapping is used based on the
 # target table name.
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -119,13 +86,6 @@ print(f"Date range: {startDate} to {endDate}")
 # ## Read Changed Rows from Lakehouse
 # Read rows from the Silver view where `LastUpdated` falls within the specified date range.
 
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
-
 # CELL ********************
 
 # Read changed rows from the lakehouse Silver view
@@ -155,13 +115,6 @@ source_df.createOrReplaceTempView("_incr_source")
 # 2. Delete those matching rows from the target
 # 3. Insert all source rows (both changed and new)
 # 4. Net new rows = InsertCount
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
@@ -214,13 +167,6 @@ source_df.unpersist()
 # ## Return Metrics
 # Get the current max date from the target table and return execution metrics
 # in the same format the pipeline expects.
-
-# METADATA ********************
-
-# META {
-# META   "language": "markdown",
-# META   "language_group": "synapse_pyspark"
-# META }
 
 # CELL ********************
 
