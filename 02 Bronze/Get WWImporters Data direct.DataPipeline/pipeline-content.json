@@ -51,504 +51,504 @@
             {
               "value": "full",
               "activities": [
-            {
-              "type": "IfCondition",
-              "typeProperties": {
-                "expression": {
-                  "value": "@equals(pipeline().parameters.NotebookVsCopydata,1)",
-                  "type": "Expression"
-                },
-                "ifTrueActivities": [
-                  {
-                    "type": "TridentNotebook",
-                    "typeProperties": {
-                      "notebookId": "ba5ce88b-68f3-4667-8653-cf3b7ca07de4",
-                      "workspaceId": "00000000-0000-0000-0000-000000000000",
-                      "parameters": {
-                        "sqlSourceSchema": {
-                          "value": {
-                            "value": "@pipeline().parameters.sqlsourceschema",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "sqlSourceTable": {
-                          "value": {
-                            "value": "@pipeline().parameters.sqlsourcetable",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "sourceColumns": {
-                          "value": {
-                            "value": "@pipeline().parameters.sourcecolumns",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "datePredicate": {
-                          "value": {
-                            "value": "@variables('datepredicate')",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "sinkTableName": {
-                          "value": {
-                            "value": "@pipeline().parameters.sinktablename",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "loadType": {
-                          "value": "full",
-                          "type": "string"
-                        },
-                        "lakehousePath": {
-                          "value": "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d",
-                          "type": "string"
-                        }
-                      }
+                {
+                  "type": "IfCondition",
+                  "typeProperties": {
+                    "expression": {
+                      "value": "@equals(pipeline().parameters.NotebookVsCopydata,1)",
+                      "type": "Expression"
                     },
-                    "policy": {
-                      "timeout": "0.12:00:00",
-                      "retry": 2,
-                      "retryIntervalInSeconds": 60,
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Copy to Delta via Notebook",
-                    "dependsOn": []
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "copyStatus",
-                      "value": {
-                        "value": "@split(split(activity('Copy to Delta via Notebook').output.result.exitValue,';;')[0],'=')[1]",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set copyStatus NB Full",
-                    "dependsOn": [
+                    "ifTrueActivities": [
                       {
-                        "activity": "Copy to Delta via Notebook",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "sourceRowsRead",
-                      "value": {
-                        "value": "@split(split(activity('Copy to Delta via Notebook').output.result.exitValue,';;')[1],'=')[1]",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set sourceRowsRead NB Full",
-                    "dependsOn": [
-                      {
-                        "activity": "Set copyStatus NB Full",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "sourceRowsCopied",
-                      "value": {
-                        "value": "@split(split(activity('Copy to Delta via Notebook').output.result.exitValue,';;')[2],'=')[1]",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set sourceRowsCopied NB Full",
-                    "dependsOn": [
-                      {
-                        "activity": "Set sourceRowsRead NB Full",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "ifFalseActivities": [
-                  {
-                    "type": "Copy",
-                    "typeProperties": {
-                      "source": {
-                        "type": "AzureSqlSource",
-                        "sqlReaderQuery": {
-                          "value": "select @{pipeline().parameters.sourcecolumns} from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
-                          "type": "Expression"
-                        },
-                        "partitionOption": "None",
-                        "queryTimeout": "02:00:00",
-                        "datasetSettings": {
-                          "type": "AzureSqlTable",
-                          "typeProperties": {
-                            "database": "WWI"
-                          },
-                          "schema": [],
-                          "externalReferences": {
-                            "connection": "c03dc74e-8399-4616-bc17-b5319b05031c"
-                          },
-                          "annotations": []
-                        }
-                      },
-                      "sink": {
-                        "type": "LakehouseTableSink",
-                        "tableActionOption": "OverwriteSchema",
-                        "applyVOrder": true,
-                        "partitionOption": "None",
-                        "datasetSettings": {
-                          "type": "LakehouseTable",
-                          "typeProperties": {
-                            "table": {
-                              "value": "@pipeline().parameters.sinktablename",
-                              "type": "Expression"
-                            }
-                          },
-                          "schema": [],
-                          "connectionSettings": {
-                            "name": "lh_fabric_demo",
-                            "properties": {
-                              "type": "Lakehouse",
-                              "typeProperties": {
-                                "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
-                                "workspaceId": "00000000-0000-0000-0000-000000000000",
-                                "rootFolder": "Tables"
+                        "type": "TridentNotebook",
+                        "typeProperties": {
+                          "notebookId": "ba5ce88b-68f3-4667-8653-cf3b7ca07de4",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "parameters": {
+                            "sqlSourceSchema": {
+                              "value": {
+                                "value": "@pipeline().parameters.sqlsourceschema",
+                                "type": "Expression"
                               },
+                              "type": "string"
+                            },
+                            "sqlSourceTable": {
+                              "value": {
+                                "value": "@pipeline().parameters.sqlsourcetable",
+                                "type": "Expression"
+                              },
+                              "type": "string"
+                            },
+                            "sourceColumns": {
+                              "value": {
+                                "value": "@pipeline().parameters.sourcecolumns",
+                                "type": "Expression"
+                              },
+                              "type": "string"
+                            },
+                            "datePredicate": {
+                              "value": {
+                                "value": "@variables('datepredicate')",
+                                "type": "Expression"
+                              },
+                              "type": "string"
+                            },
+                            "sinkTableName": {
+                              "value": {
+                                "value": "@pipeline().parameters.sinktablename",
+                                "type": "Expression"
+                              },
+                              "type": "string"
+                            },
+                            "loadType": {
+                              "value": "full",
+                              "type": "string"
+                            },
+                            "lakehousePath": {
+                              "value": "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d",
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "policy": {
+                          "timeout": "0.12:00:00",
+                          "retry": 2,
+                          "retryIntervalInSeconds": 60,
+                          "secureInput": false,
+                          "secureOutput": false
+                        },
+                        "name": "Copy to Delta via Notebook",
+                        "dependsOn": []
+                      },
+                      {
+                        "type": "SetVariable",
+                        "typeProperties": {
+                          "variableName": "copyStatus",
+                          "value": {
+                            "value": "@split(split(activity('Copy to Delta via Notebook').output.result.exitValue,';;')[0],'=')[1]",
+                            "type": "Expression"
+                          }
+                        },
+                        "policy": {
+                          "secureInput": false,
+                          "secureOutput": false
+                        },
+                        "name": "Set copyStatus NB Full",
+                        "dependsOn": [
+                          {
+                            "activity": "Copy to Delta via Notebook",
+                            "dependencyConditions": [
+                              "Succeeded"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "SetVariable",
+                        "typeProperties": {
+                          "variableName": "sourceRowsRead",
+                          "value": {
+                            "value": "@split(split(activity('Copy to Delta via Notebook').output.result.exitValue,';;')[1],'=')[1]",
+                            "type": "Expression"
+                          }
+                        },
+                        "policy": {
+                          "secureInput": false,
+                          "secureOutput": false
+                        },
+                        "name": "Set sourceRowsRead NB Full",
+                        "dependsOn": [
+                          {
+                            "activity": "Set copyStatus NB Full",
+                            "dependencyConditions": [
+                              "Succeeded"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "SetVariable",
+                        "typeProperties": {
+                          "variableName": "sourceRowsCopied",
+                          "value": {
+                            "value": "@split(split(activity('Copy to Delta via Notebook').output.result.exitValue,';;')[2],'=')[1]",
+                            "type": "Expression"
+                          }
+                        },
+                        "policy": {
+                          "secureInput": false,
+                          "secureOutput": false
+                        },
+                        "name": "Set sourceRowsCopied NB Full",
+                        "dependsOn": [
+                          {
+                            "activity": "Set sourceRowsRead NB Full",
+                            "dependencyConditions": [
+                              "Succeeded"
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "ifFalseActivities": [
+                      {
+                        "type": "Copy",
+                        "typeProperties": {
+                          "source": {
+                            "type": "AzureSqlSource",
+                            "sqlReaderQuery": {
+                              "value": "select @{pipeline().parameters.sourcecolumns} from @{pipeline().parameters.sqlsourceschema}.@{pipeline().parameters.sqlsourcetable} where  @{variables('datepredicate')}",
+                              "type": "Expression"
+                            },
+                            "partitionOption": "None",
+                            "queryTimeout": "02:00:00",
+                            "datasetSettings": {
+                              "type": "AzureSqlTable",
+                              "typeProperties": {
+                                "database": "WWI"
+                              },
+                              "schema": [],
                               "externalReferences": {
-                                "connection": "da12d4e7-41bf-42b1-81f9-e8f8732fde1d"
+                                "connection": "c03dc74e-8399-4616-bc17-b5319b05031c"
                               },
                               "annotations": []
                             }
                           },
-                          "annotations": []
-                        }
+                          "sink": {
+                            "type": "LakehouseTableSink",
+                            "tableActionOption": "OverwriteSchema",
+                            "applyVOrder": true,
+                            "partitionOption": "None",
+                            "datasetSettings": {
+                              "type": "LakehouseTable",
+                              "typeProperties": {
+                                "table": {
+                                  "value": "@pipeline().parameters.sinktablename",
+                                  "type": "Expression"
+                                }
+                              },
+                              "schema": [],
+                              "connectionSettings": {
+                                "name": "lh_fabric_demo",
+                                "properties": {
+                                  "type": "Lakehouse",
+                                  "typeProperties": {
+                                    "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
+                                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                                    "rootFolder": "Tables"
+                                  },
+                                  "externalReferences": {
+                                    "connection": "da12d4e7-41bf-42b1-81f9-e8f8732fde1d"
+                                  },
+                                  "annotations": []
+                                }
+                              },
+                              "annotations": []
+                            }
+                          },
+                          "translator": {
+                            "type": "TabularTranslator",
+                            "typeConversion": true,
+                            "typeConversionSettings": {
+                              "allowDataTruncation": true,
+                              "treatBooleanAsNumber": false
+                            }
+                          },
+                          "enableStaging": false
+                        },
+                        "policy": {
+                          "timeout": "0.12:00:00",
+                          "retry": 2,
+                          "retryIntervalInSeconds": 60,
+                          "secureInput": false,
+                          "secureOutput": false
+                        },
+                        "name": "Copy data to delta table",
+                        "dependsOn": []
                       },
-                      "translator": {
-                        "type": "TabularTranslator",
-                        "typeConversion": true,
-                        "typeConversionSettings": {
-                          "allowDataTruncation": true,
-                          "treatBooleanAsNumber": false
-                        }
+                      {
+                        "type": "SetVariable",
+                        "typeProperties": {
+                          "variableName": "copyStatus",
+                          "value": {
+                            "value": "@activity('Copy data to delta table').output.executionDetails[0].status",
+                            "type": "Expression"
+                          }
+                        },
+                        "policy": {
+                          "secureInput": false,
+                          "secureOutput": false
+                        },
+                        "name": "Set copyStatus Copy Full",
+                        "dependsOn": [
+                          {
+                            "activity": "Copy data to delta table",
+                            "dependencyConditions": [
+                              "Succeeded"
+                            ]
+                          }
+                        ]
                       },
-                      "enableStaging": false
-                    },
-                    "policy": {
-                      "timeout": "0.12:00:00",
-                      "retry": 2,
-                      "retryIntervalInSeconds": 60,
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Copy data to delta table",
-                    "dependsOn": []
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "copyStatus",
-                      "value": {
-                        "value": "@activity('Copy data to delta table').output.executionDetails[0].status",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set copyStatus Copy Full",
-                    "dependsOn": [
                       {
-                        "activity": "Copy data to delta table",
-                        "dependencyConditions": [
-                          "Succeeded"
+                        "type": "SetVariable",
+                        "typeProperties": {
+                          "variableName": "sourceRowsRead",
+                          "value": {
+                            "value": "@string(activity('Copy data to delta table').output.rowsRead)",
+                            "type": "Expression"
+                          }
+                        },
+                        "policy": {
+                          "secureInput": false,
+                          "secureOutput": false
+                        },
+                        "name": "Set sourceRowsRead Copy Full",
+                        "dependsOn": [
+                          {
+                            "activity": "Set copyStatus Copy Full",
+                            "dependencyConditions": [
+                              "Succeeded"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "SetVariable",
+                        "typeProperties": {
+                          "variableName": "sourceRowsCopied",
+                          "value": {
+                            "value": "@string(activity('Copy data to delta table').output.rowsCopied)",
+                            "type": "Expression"
+                          }
+                        },
+                        "policy": {
+                          "secureInput": false,
+                          "secureOutput": false
+                        },
+                        "name": "Set sourceRowsCopied Copy Full",
+                        "dependsOn": [
+                          {
+                            "activity": "Set sourceRowsRead Copy Full",
+                            "dependencyConditions": [
+                              "Succeeded"
+                            ]
+                          }
                         ]
                       }
                     ]
                   },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "sourceRowsRead",
-                      "value": {
-                        "value": "@string(activity('Copy data to delta table').output.rowsRead)",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set sourceRowsRead Copy Full",
-                    "dependsOn": [
-                      {
-                        "activity": "Set copyStatus Copy Full",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "sourceRowsCopied",
-                      "value": {
-                        "value": "@string(activity('Copy data to delta table').output.rowsCopied)",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set sourceRowsCopied Copy Full",
-                    "dependsOn": [
-                      {
-                        "activity": "Set sourceRowsRead Copy Full",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              "name": "Use Notebook or Copy Full",
-              "dependsOn": []
-            },
-            {
-              "type": "TridentNotebook",
-              "typeProperties": {
-                "notebookId": "d2a08981-bfa4-bdcf-4208-6a2be6905558",
-                "workspaceId": "00000000-0000-0000-0000-000000000000",
-                "parameters": {
-                  "lakehousePath": {
-                    "value": "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d",
-                    "type": "string"
-                  },
-                  "tableName": {
-                    "value": {
-                      "value": "@pipeline().parameters.sinktablename",
-                      "type": "Expression"
-                    },
-                    "type": "string"
-                  },
-                  "tableKey": {
-                    "value": {
-                      "value": "@pipeline().parameters.sourcekeycolumn",
-                      "type": "Expression"
-                    },
-                    "type": "string"
-                  },
-                  "dateColumn": {
-                    "value": {
-                      "value": "@pipeline().parameters.sqlsourcedatecolumn",
-                      "type": "Expression"
-                    },
-                    "type": "string"
-                  }
-                }
-              },
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 2,
-                "retryIntervalInSeconds": 60,
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Get MaxDate loaded",
-              "dependsOn": [
+                  "name": "Use Notebook or Copy Full",
+                  "dependsOn": []
+                },
                 {
-                  "activity": "Use Notebook or Copy Full",
-                  "dependencyConditions": [
-                    "Succeeded"
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "SetVariable",
-              "typeProperties": {
-                "variableName": "maxdate",
-                "value": {
-                  "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'rowcount='),split(split(activity('Get MaxDate loaded').output.result.exitValue,';;')[0],'=')[1],'1900-01-01 00:00:00')",
-                  "type": "Expression"
-                }
-              },
-              "policy": {
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "maxdate",
-              "dependsOn": [
-                {
-                  "activity": "Get MaxDate loaded",
-                  "dependencyConditions": [
-                    "Succeeded"
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "SetVariable",
-              "typeProperties": {
-                "variableName": "rowsinserted",
-                "value": {
-                  "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'rowcount='),split(split(activity('Get MaxDate loaded').output.result.exitValue,';;')[1],'=')[1],'0')",
-                  "type": "Expression"
-                }
-              },
-              "policy": {
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "set rows inserted",
-              "dependsOn": [
-                {
-                  "activity": "maxdate",
-                  "dependencyConditions": [
-                    "Succeeded"
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "SetVariable",
-              "typeProperties": {
-                "variableName": "pipelineendtime",
-                "value": {
-                  "value": "@utcnow()",
-                  "type": "Expression"
-                }
-              },
-              "policy": {
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Set pipeline endtime",
-              "dependsOn": [
-                {
-                  "activity": "set rows inserted",
-                  "dependencyConditions": [
-                    "Succeeded"
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "Script",
-              "typeProperties": {
-                "scripts": [
-                  {
-                    "text": {
-                      "value": "Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{variables('copyStatus')}', rowsread = @{variables('sourceRowsRead')}, rowscopied= @{variables('sourceRowsCopied')}, deltalakeinserted = '@{variables('rowsinserted')}', deltalakeupdated =0, sqlmaxdatetime = '@{variables('maxdate')}', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}'",
-                      "type": "Expression"
-                    },
-                    "type": "NonQuery"
-                  }
-                ],
-                "scriptBlockExecutionTimeout": "02:00:00"
-              },
-              "connectionSettings": {
-                "name": "FabricMetadataOrchestration",
-                "properties": {
-                  "type": "FabricSqlDatabase",
+                  "type": "TridentNotebook",
                   "typeProperties": {
-                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                    "notebookId": "d2a08981-bfa4-bdcf-4208-6a2be6905558",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "parameters": {
+                      "lakehousePath": {
+                        "value": "abfss://ecfcf483-666f-4267-9456-d09b370c4a12@onelake.dfs.fabric.microsoft.com/d3952fd1-aa92-4d42-84fd-a99afcc6614d",
+                        "type": "string"
+                      },
+                      "tableName": {
+                        "value": {
+                          "value": "@pipeline().parameters.sinktablename",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "tableKey": {
+                        "value": {
+                          "value": "@pipeline().parameters.sourcekeycolumn",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      },
+                      "dateColumn": {
+                        "value": {
+                          "value": "@pipeline().parameters.sqlsourcedatecolumn",
+                          "type": "Expression"
+                        },
+                        "type": "string"
+                      }
+                    }
                   },
-                  "externalReferences": {
-                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 2,
+                    "retryIntervalInSeconds": 60,
+                    "secureInput": false,
+                    "secureOutput": false
                   },
-                  "annotations": []
-                }
-              },
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Update Pipeline Run details",
-              "dependsOn": [
-                {
-                  "activity": "Set pipeline endtime",
-                  "dependencyConditions": [
-                    "Succeeded"
+                  "name": "Get MaxDate loaded",
+                  "dependsOn": [
+                    {
+                      "activity": "Use Notebook or Copy Full",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
                   ]
-                }
-              ]
-            },
-            {
-              "type": "Script",
-              "typeProperties": {
-                "scripts": [
-                  {
-                    "text": {
-                      "value": "Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Failed', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{utcnow()}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}'",
-                      "type": "Expression"
-                    },
-                    "type": "NonQuery"
-                  }
-                ],
-                "scriptBlockExecutionTimeout": "02:00:00"
-              },
-              "connectionSettings": {
-                "name": "FabricMetadataOrchestration",
-                "properties": {
-                  "type": "FabricSqlDatabase",
+                },
+                {
+                  "type": "SetVariable",
                   "typeProperties": {
-                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                    "variableName": "maxdate",
+                    "value": {
+                      "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'rowcount='),split(split(activity('Get MaxDate loaded').output.result.exitValue,';;')[0],'=')[1],'1900-01-01 00:00:00')",
+                      "type": "Expression"
+                    }
                   },
-                  "externalReferences": {
-                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
                   },
-                  "annotations": []
-                }
-              },
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Log Full Load Failure",
-              "dependsOn": [
+                  "name": "maxdate",
+                  "dependsOn": [
+                    {
+                      "activity": "Get MaxDate loaded",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
                 {
-                  "activity": "Use Notebook or Copy Full",
-                  "dependencyConditions": [
-                    "Failed"
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "rowsinserted",
+                    "value": {
+                      "value": "@if(contains(activity('Get MaxDate loaded').output.result.exitValue,'rowcount='),split(split(activity('Get MaxDate loaded').output.result.exitValue,';;')[1],'=')[1],'0')",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "set rows inserted",
+                  "dependsOn": [
+                    {
+                      "activity": "maxdate",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "pipelineendtime",
+                    "value": {
+                      "value": "@utcnow()",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set pipeline endtime",
+                  "dependsOn": [
+                    {
+                      "activity": "set rows inserted",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Script",
+                  "typeProperties": {
+                    "scripts": [
+                      {
+                        "text": {
+                          "value": "Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{variables('copyStatus')}', rowsread = @{variables('sourceRowsRead')}, rowscopied= @{variables('sourceRowsCopied')}, deltalakeinserted = '@{variables('rowsinserted')}', deltalakeupdated =0, sqlmaxdatetime = '@{variables('maxdate')}', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}'",
+                          "type": "Expression"
+                        },
+                        "type": "NonQuery"
+                      }
+                    ],
+                    "scriptBlockExecutionTimeout": "02:00:00"
+                  },
+                  "connectionSettings": {
+                    "name": "FabricMetadataOrchestration",
+                    "properties": {
+                      "type": "FabricSqlDatabase",
+                      "typeProperties": {
+                        "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000"
+                      },
+                      "externalReferences": {
+                        "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Update Pipeline Run details",
+                  "dependsOn": [
+                    {
+                      "activity": "Set pipeline endtime",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Script",
+                  "typeProperties": {
+                    "scripts": [
+                      {
+                        "text": {
+                          "value": "Update dbo.PipelineOrchestrator_FabricLakehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Failed', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{utcnow()}' where sqlsourceschema = '@{pipeline().parameters.sqlsourceschema}' and sqlsourcetable = '@{pipeline().parameters.sqlsourcetable}'",
+                          "type": "Expression"
+                        },
+                        "type": "NonQuery"
+                      }
+                    ],
+                    "scriptBlockExecutionTimeout": "02:00:00"
+                  },
+                  "connectionSettings": {
+                    "name": "FabricMetadataOrchestration",
+                    "properties": {
+                      "type": "FabricSqlDatabase",
+                      "typeProperties": {
+                        "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000"
+                      },
+                      "externalReferences": {
+                        "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Log Full Load Failure",
+                  "dependsOn": [
+                    {
+                      "activity": "Use Notebook or Copy Full",
+                      "dependencyConditions": [
+                        "Failed"
+                      ]
+                    }
                   ]
                 }
-              ]
-            }
               ]
             }
           ],
