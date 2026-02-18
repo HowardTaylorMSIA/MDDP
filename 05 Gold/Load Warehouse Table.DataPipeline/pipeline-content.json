@@ -18,13 +18,16 @@
         "dependsOn": []
       },
       {
-        "type": "IfCondition",
+        "type": "Switch",
         "typeProperties": {
           "expression": {
-            "value": "@equals(pipeline().parameters.loadtype,'full')",
+            "value": "@pipeline().parameters.loadtype",
             "type": "Expression"
           },
-          "ifTrueActivities": [
+          "cases": [
+            {
+              "value": "full",
+              "activities": [
             {
               "type": "IfCondition",
               "typeProperties": {
@@ -379,8 +382,10 @@
                 }
               ]
             }
+              ]
+            }
           ],
-          "ifFalseActivities": [
+          "defaultActivities": [
             {
               "type": "IfCondition",
               "typeProperties": {
