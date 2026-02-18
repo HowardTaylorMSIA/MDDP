@@ -20,7 +20,7 @@
       {
         "type": "Switch",
         "typeProperties": {
-          "expression": {
+          "on": {
             "value": "@pipeline().parameters.loadtype",
             "type": "Expression"
           },
