@@ -56,23 +56,17 @@ sinkTable = "InvoicedSales"
 # MARKDOWN ********************
 
 # ## Read from Lakehouse
-# The pipeline parameters pass Silver schema view names (e.g. Silver.vCalendar) which only
-# exist on the SQL analytics endpoint. PySpark reads Delta tables directly, so we derive
-# the Delta table name by stripping the "v" prefix from the source view name.
+# Read from the Silver schema views on the lakehouse.
 
 # CELL ********************
 
-# Derive the Delta table name from the source view name
-# Convention: Silver.vCalendar -> Calendar (strip 'v' prefix)
-deltaTableName = sourceTable[1:] if sourceTable.startswith("v") else sourceTable
-
-# Read the source table from the lakehouse Delta table directly
-df = spark.sql(f"SELECT * FROM lh_fabric_demo.dbo.{deltaTableName}")
+# Read the source view from the lakehouse Silver schema
+df = spark.sql(f"SELECT * FROM lh_fabric_demo.{sourceSchema}.{sourceTable}")
 
 # Cache to avoid re-reading during write
 df.cache()
 rowsCopied = df.count()
-print(f"Source view: {sourceSchema}.{sourceTable} -> Delta table: {deltaTableName}")
+print(f"Source: {sourceSchema}.{sourceTable}")
 print(f"Rows read from lakehouse: {rowsCopied}")
 
 # METADATA ********************
