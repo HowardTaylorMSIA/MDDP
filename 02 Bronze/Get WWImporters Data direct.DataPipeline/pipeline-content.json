@@ -731,7 +731,7 @@
                             "location": {
                               "type": "LakehouseLocation",
                               "folderPath": {
-                                "value": "incremental/@{pipeline().parameters.sinktablename}",
+                                "value": "incremental/@{pipeline().parameters.sinktablename}/@{pipeline().RunId}",
                                 "type": "Expression"
                               },
                               "fileName": {

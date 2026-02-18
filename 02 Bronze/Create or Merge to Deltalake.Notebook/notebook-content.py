@@ -62,8 +62,8 @@ deltaTablePath = f"{lakehousePath}/Tables/{tableName}"
 
 # CELL ********************
 
-parquetFilePath = f"{lakehousePath}/Files/incremental/{tableName}/{tableName}.parquet"
-# print(parquetFilePath)
+parquetFolderPath = f"{lakehousePath}/Files/incremental/{tableName}"
+# print(parquetFolderPath)
 
 # METADATA ********************
 
@@ -74,7 +74,7 @@ parquetFilePath = f"{lakehousePath}/Files/incremental/{tableName}/{tableName}.pa
 
 # CELL ********************
 
-df2 = spark.read.parquet(parquetFilePath)
+df2 = spark.read.parquet(parquetFolderPath)
 # display(df2)
 
 # METADATA ********************
@@ -133,9 +133,9 @@ else:
 # CELL ********************
 
 try:
-    mssparkutils.fs.rm(parquetFilePath, True)
+    mssparkutils.fs.rm(parquetFolderPath, True)
 except Exception:
-    pass  # File may not exist if notebook was invoked directly (not via Copy Data)
+    pass  # Folder may not exist if notebook was invoked directly (not via Copy Data)
 
 # METADATA ********************
 
