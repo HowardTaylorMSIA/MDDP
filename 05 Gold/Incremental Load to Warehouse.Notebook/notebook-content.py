@@ -6,13 +6,13 @@
 # # Incremental Load to Warehouse
 # 
 # Replaces the Stored Procedure-based incremental load activity in the Load Warehouse Table pipeline.
-# Reads changed rows from a lakehouse Silver view and applies a DELETE-matching + INSERT pattern
+# Reads changed rows from a Silver view in the warehouse and applies a DELETE-matching + INSERT pattern
 # to a Fabric Warehouse Gold table.
 # 
 # This replicates the logic of the warehouse stored procedures (e.g. `Gold.IncrLoadInvoicedSales`,
 # `Gold.IncrLoadSalesOrders`) but implemented in PySpark / Spark SQL.
 # 
-# **Source view convention:** `lh_fabric_demo.Silver.v{sinkTable}` (e.g. `vInvoicedSales`)
+# **Source view convention:** `dw_fabric_demo.Silver.v{sinkTable}` (e.g. `vInvoicedSales`)
 
 # CELL ********************
 
@@ -68,10 +68,12 @@ else:
 
 print(f"Key columns: {key_cols}")
 
-# Source view name follows convention: v{sinkTable} in Silver schema
-sourceViewName = f"v{sinkTable}"
-print(f"Source: lh_fabric_demo.Silver.{sourceViewName}")
-print(f"Target table: dw_fabric_demo.{sinkSchema}.{sinkTable}")
+# Source Silver view lives in the warehouse: dw_fabric_demo.Silver.v{sinkTable}
+source_fqn = f"dw_fabric_demo.Silver.v{sinkTable}"
+target_fqn = f"dw_fabric_demo.{sinkSchema}.{sinkTable}"
+
+print(f"Source view: {source_fqn}")
+print(f"Target table: {target_fqn}")
 print(f"Date range: {startDate} to {endDate}")
 
 # METADATA ********************
@@ -83,14 +85,15 @@ print(f"Date range: {startDate} to {endDate}")
 
 # MARKDOWN ********************
 
-# ## Read Changed Rows from Lakehouse
+# ## Read Changed Rows from Warehouse Silver View
 # Read rows from the Silver view where `LastUpdated` falls within the specified date range.
+# The view already outputs the correct column names for the Gold table.
 
 # CELL ********************
 
-# Read changed rows from the lakehouse Silver view
+# Read changed rows from the warehouse Silver view
 source_df = spark.sql(f"""
-    SELECT * FROM lh_fabric_demo.Silver.{sourceViewName}
+    SELECT * FROM {source_fqn}
     WHERE LastUpdated >= '{startDate}' AND LastUpdated <= '{endDate}'
 """)
 source_df.cache()
@@ -120,7 +123,6 @@ source_df.createOrReplaceTempView("_incr_source")
 
 # Build key join condition for SQL
 key_join_condition = " AND ".join([f"t.{k} = s.{k}" for k in key_cols])
-target_fqn = f"dw_fabric_demo.{sinkSchema}.{sinkTable}"
 key_delete_condition = " AND ".join([f"{target_fqn}.{k} = s.{k}" for k in key_cols])
 
 # Count rows that already exist in target (these are "updates")

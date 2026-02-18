@@ -25,7 +25,8 @@
 # # Copy Lakehouse to Warehouse
 # 
 # Replaces the Copy Data activity in the Load Warehouse Table pipeline.
-# Reads from a lakehouse Delta table and writes to a Fabric Warehouse table.
+# Reads from a Silver view in the warehouse (which references the lakehouse Delta tables)
+# and writes to a Fabric Warehouse Gold table.
 # Performs a DELETE + INSERT pattern for full load replacement.
 
 # CELL ********************
@@ -55,19 +56,24 @@ sinkTable = "InvoicedSales"
 
 # MARKDOWN ********************
 
-# ## Read from Lakehouse
-# Read from the Silver schema views on the lakehouse.
+# ## Read from Warehouse Silver View
+# The Silver views now live in `dw_fabric_demo.Silver` and reference the lakehouse
+# Delta tables with the correct column names/renames for the Gold layer.
+# We simply SELECT * from the view — it already outputs the right schema.
 
 # CELL ********************
 
-# Read the source view from the lakehouse Silver schema
-df = spark.sql(f"SELECT * FROM lh_fabric_demo.{sourceSchema}.{sourceTable}")
+source_fqn = f"dw_fabric_demo.{sourceSchema}.{sourceTable}"
+target_fqn = f"dw_fabric_demo.{sinkSchema}.{sinkTable}"
+
+# Read from the Silver view in the warehouse
+df = spark.sql(f"SELECT * FROM {source_fqn}")
 
 # Cache to avoid re-reading during write
 df.cache()
 rowsCopied = df.count()
-print(f"Source: {sourceSchema}.{sourceTable}")
-print(f"Rows read from lakehouse: {rowsCopied}")
+print(f"Source: {source_fqn}")
+print(f"Rows read: {rowsCopied}")
 
 # METADATA ********************
 
@@ -85,13 +91,13 @@ print(f"Rows read from lakehouse: {rowsCopied}")
 # CELL ********************
 
 # Delete existing data from the warehouse target table
-spark.sql(f"DELETE FROM dw_fabric_demo.{sinkSchema}.{sinkTable}")
-print(f"Deleted existing data from dw_fabric_demo.{sinkSchema}.{sinkTable}")
+spark.sql(f"DELETE FROM {target_fqn}")
+print(f"Deleted existing data from {target_fqn}")
 
 # Create a temporary view and insert into warehouse
 df.createOrReplaceTempView("_staging_data")
-spark.sql(f"INSERT INTO dw_fabric_demo.{sinkSchema}.{sinkTable} SELECT * FROM _staging_data")
-print(f"Inserted {rowsCopied} rows into dw_fabric_demo.{sinkSchema}.{sinkTable}")
+spark.sql(f"INSERT INTO {target_fqn} SELECT * FROM _staging_data")
+print(f"Inserted {rowsCopied} rows into {target_fqn}")
 
 df.unpersist()
 
