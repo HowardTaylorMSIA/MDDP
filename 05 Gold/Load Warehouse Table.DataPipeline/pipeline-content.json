@@ -145,15 +145,16 @@
                           "type": "DataWarehouseTable",
                           "schema": [],
                           "connectionSettings": {
-                            "name": "lh_fabric_demo",
+                            "name": "dw_fabric_demo",
                             "properties": {
-                              "type": "Lakehouse",
+                              "type": "DataWarehouse",
                               "typeProperties": {
-                                "artifactId": "fcc6614d-a99a-84fd-4d42-aa92d3952fd1",
-                                "workspaceId": "00000000-0000-0000-0000-000000000000"
+                                "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
+                                "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
+                                "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
                               },
                               "externalReferences": {
-                                "connection": "da12d4e7-41bf-42b1-81f9-e8f8732fde1d"
+                                "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
                               },
                               "annotations": []
                             }

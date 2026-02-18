@@ -45,7 +45,7 @@ BEGIN
         target.Quantity            = source.Quantity,
         target.LastUpdated         = source.LastUpdated
     FROM [dw_fabric_demo].[Gold].[SalesOrders] AS target
-    INNER JOIN [lh_fabric_demo].[Silver].[vSalesOrders] AS source
+    INNER JOIN [dw_fabric_demo].[Silver].[vSalesOrders] AS source
         ON  target.OrderID     = source.OrderID
         AND target.OrderLineID = source.OrderLineID
     WHERE source.LastUpdated >= @StartDate
@@ -69,7 +69,7 @@ BEGIN
         source.ExtendedPrice,
         source.Quantity,
         source.LastUpdated
-    FROM [lh_fabric_demo].[Silver].[vSalesOrders] AS source
+    FROM [dw_fabric_demo].[Silver].[vSalesOrders] AS source
     LEFT JOIN [dw_fabric_demo].[Gold].[SalesOrders] AS target
         ON  target.OrderID     = source.OrderID
         AND target.OrderLineID = source.OrderLineID

@@ -49,7 +49,7 @@ BEGIN
         target.TaxAmount           = source.TaxAmount,
         target.LastUpdated         = source.LastUpdated
     FROM [dw_fabric_demo].[Gold].[InvoicedSales] AS target
-    INNER JOIN [lh_fabric_demo].[Silver].[vInvoicedSales] AS source
+    INNER JOIN [dw_fabric_demo].[Silver].[vInvoicedSales] AS source
         ON  target.InvoiceID     = source.InvoiceID
         AND target.InvoiceLineID = source.InvoiceLineID
     WHERE source.LastUpdated >= @StartDate
@@ -76,7 +76,7 @@ BEGIN
         source.GrossProfit,
         source.TaxAmount,
         source.LastUpdated
-    FROM [lh_fabric_demo].[Silver].[vInvoicedSales] AS source
+    FROM [dw_fabric_demo].[Silver].[vInvoicedSales] AS source
     LEFT JOIN [dw_fabric_demo].[Gold].[InvoicedSales] AS target
         ON  target.InvoiceID     = source.InvoiceID
         AND target.InvoiceLineID = source.InvoiceLineID
