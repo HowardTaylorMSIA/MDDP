@@ -128,6 +128,24 @@ else:
 
 # MARKDOWN ********************
 
+# Clean up the staging parquet file so subsequent pipeline runs don't hit a LakehousePathConflicts error
+
+# CELL ********************
+
+try:
+    mssparkutils.fs.rm(parquetFilePath, True)
+except Exception:
+    pass  # File may not exist if notebook was invoked directly (not via Copy Data)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# MARKDOWN ********************
+
 # Get the latest date loaded into the table - this will be used for watermarking; return the max date, the number of rows inserted and number updated
 
 # CELL ********************
