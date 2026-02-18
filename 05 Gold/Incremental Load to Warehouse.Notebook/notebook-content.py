@@ -69,8 +69,11 @@ else:
 print(f"Key columns: {key_cols}")
 
 # Derive source view name from sink table (convention: v{sinkTable} in Silver schema)
+# Note: Silver views only exist on the SQL analytics endpoint, not in PySpark.
+# We read from the underlying Delta table directly instead.
 sourceViewName = f"v{sinkTable}"
-print(f"Source view: lh_fabric_demo.Silver.{sourceViewName}")
+deltaTableName = sinkTable  # The lakehouse Delta table = sinkTable (e.g. Calendar, Customer)
+print(f"Source view: lh_fabric_demo.Silver.{sourceViewName} -> Delta table: {deltaTableName}")
 print(f"Target table: dw_fabric_demo.{sinkSchema}.{sinkTable}")
 print(f"Date range: {startDate} to {endDate}")
 
@@ -84,13 +87,14 @@ print(f"Date range: {startDate} to {endDate}")
 # MARKDOWN ********************
 
 # ## Read Changed Rows from Lakehouse
-# Read rows from the Silver view where `LastUpdated` falls within the specified date range.
+# Read rows from the Delta table where `LastUpdated` falls within the specified date range.
+# (Silver views are only on the SQL analytics endpoint; PySpark reads Delta tables directly.)
 
 # CELL ********************
 
-# Read changed rows from the lakehouse Silver view
+# Read changed rows from the lakehouse Delta table
 source_df = spark.sql(f"""
-    SELECT * FROM lh_fabric_demo.Silver.{sourceViewName}
+    SELECT * FROM lh_fabric_demo.dbo.{deltaTableName}
     WHERE LastUpdated >= '{startDate}' AND LastUpdated <= '{endDate}'
 """)
 source_df.cache()
