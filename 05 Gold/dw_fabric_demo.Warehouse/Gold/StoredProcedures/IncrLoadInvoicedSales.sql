@@ -26,7 +26,7 @@ BEGIN
     IF @StartDate IS NULL
     BEGIN
         SELECT @StartDate = ISNULL(MAX(LastUpdated), '2013-01-01')
-        FROM [dw_fabric_demo].[Gold].[InvoicedSales];
+        FROM [Gold].[InvoicedSales];
     END;
 
     -- Default @EndDate to far-future (no upper bound)
@@ -48,8 +48,8 @@ BEGIN
         target.GrossProfit         = source.GrossProfit,
         target.TaxAmount           = source.TaxAmount,
         target.LastUpdated         = source.LastUpdated
-    FROM [dw_fabric_demo].[Gold].[InvoicedSales] AS target
-    INNER JOIN [dw_fabric_demo].[Silver].[vInvoicedSales] AS source
+    FROM [Gold].[InvoicedSales] AS target
+    INNER JOIN [Silver].[vInvoicedSales] AS source
         ON  target.InvoiceID     = source.InvoiceID
         AND target.InvoiceLineID = source.InvoiceLineID
     WHERE source.LastUpdated >= @StartDate
@@ -60,7 +60,7 @@ BEGIN
     --------------------------------------------------------------------------
     -- Step 2: INSERT rows that exist in source but not yet in target
     --------------------------------------------------------------------------
-    INSERT INTO [dw_fabric_demo].[Gold].[InvoicedSales]
+    INSERT INTO [Gold].[InvoicedSales]
         (InvoiceID, InvoiceLineID, InvoiceDate, CustomerID, StockItemID,
          SalespersonPersonID, ExtendedPrice, Quantity, GrossProfit,
          TaxAmount, LastUpdated)
@@ -76,8 +76,8 @@ BEGIN
         source.GrossProfit,
         source.TaxAmount,
         source.LastUpdated
-    FROM [dw_fabric_demo].[Silver].[vInvoicedSales] AS source
-    LEFT JOIN [dw_fabric_demo].[Gold].[InvoicedSales] AS target
+    FROM [Silver].[vInvoicedSales] AS source
+    LEFT JOIN [Gold].[InvoicedSales] AS target
         ON  target.InvoiceID     = source.InvoiceID
         AND target.InvoiceLineID = source.InvoiceLineID
     WHERE target.InvoiceID IS NULL
@@ -93,5 +93,5 @@ BEGIN
         @UpdateCount AS UpdateCount,
         @InsertCount AS InsertCount,
         (SELECT MAX(LastUpdated)
-         FROM [dw_fabric_demo].[Gold].[InvoicedSales]) AS MaxDate;
+         FROM [Gold].[InvoicedSales]) AS MaxDate;
 END;

@@ -24,7 +24,7 @@ BEGIN
     IF @StartDate IS NULL
     BEGIN
         SELECT @StartDate = ISNULL(MAX(LastUpdated), '2013-01-01')
-        FROM [dw_fabric_demo].[Gold].[SalesOrders];
+        FROM [Gold].[SalesOrders];
     END;
 
     -- Default @EndDate to far-future (no upper bound)
@@ -44,8 +44,8 @@ BEGIN
         target.ExtendedPrice       = source.ExtendedPrice,
         target.Quantity            = source.Quantity,
         target.LastUpdated         = source.LastUpdated
-    FROM [dw_fabric_demo].[Gold].[SalesOrders] AS target
-    INNER JOIN [dw_fabric_demo].[Silver].[vSalesOrders] AS source
+    FROM [Gold].[SalesOrders] AS target
+    INNER JOIN [Silver].[vSalesOrders] AS source
         ON  target.OrderID     = source.OrderID
         AND target.OrderLineID = source.OrderLineID
     WHERE source.LastUpdated >= @StartDate
@@ -56,7 +56,7 @@ BEGIN
     --------------------------------------------------------------------------
     -- Step 2: INSERT rows that exist in source but not yet in target
     --------------------------------------------------------------------------
-    INSERT INTO [dw_fabric_demo].[Gold].[SalesOrders]
+    INSERT INTO [Gold].[SalesOrders]
         (OrderID, OrderLineID, OrderDate, CustomerID, StockItemID,
          SalespersonPersonID, ExtendedPrice, Quantity, LastUpdated)
     SELECT
@@ -69,8 +69,8 @@ BEGIN
         source.ExtendedPrice,
         source.Quantity,
         source.LastUpdated
-    FROM [dw_fabric_demo].[Silver].[vSalesOrders] AS source
-    LEFT JOIN [dw_fabric_demo].[Gold].[SalesOrders] AS target
+    FROM [Silver].[vSalesOrders] AS source
+    LEFT JOIN [Gold].[SalesOrders] AS target
         ON  target.OrderID     = source.OrderID
         AND target.OrderLineID = source.OrderLineID
     WHERE target.OrderID IS NULL
@@ -86,5 +86,5 @@ BEGIN
         @UpdateCount AS UpdateCount,
         @InsertCount AS InsertCount,
         (SELECT MAX(LastUpdated)
-         FROM [dw_fabric_demo].[Gold].[SalesOrders]) AS MaxDate;
+         FROM [Gold].[SalesOrders]) AS MaxDate;
 END;
