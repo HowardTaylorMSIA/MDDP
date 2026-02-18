@@ -28,541 +28,17 @@
             {
               "value": "full",
               "activities": [
-            {
-              "type": "IfCondition",
-              "typeProperties": {
-                "expression": {
-                  "value": "@equals(pipeline().parameters.NotebookVsCopydata,1)",
-                  "type": "Expression"
-                },
-                "ifTrueActivities": [
-                  {
-                    "type": "TridentNotebook",
-                    "typeProperties": {
-                      "notebookId": "6a6da163-005f-4184-af1e-e36979512e45",
-                      "workspaceId": "00000000-0000-0000-0000-000000000000",
-                      "parameters": {
-                        "sourceSchema": {
-                          "value": {
-                            "value": "@pipeline().parameters.sourceschema",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "sourceTable": {
-                          "value": {
-                            "value": "@pipeline().parameters.sourcetable",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "sinkSchema": {
-                          "value": {
-                            "value": "@pipeline().parameters.sinkschema",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "sinkTable": {
-                          "value": {
-                            "value": "@pipeline().parameters.sinktable",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "policy": {
-                      "timeout": "0.12:00:00",
-                      "retry": 2,
-                      "retryIntervalInSeconds": 60,
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Copy to Warehouse via Notebook",
-                    "dependsOn": []
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "copyStatus",
-                      "value": {
-                        "value": "@split(split(activity('Copy to Warehouse via Notebook').output.result.exitValue,';;')[0],'=')[1]",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set copyStatus NB WH",
-                    "dependsOn": [
-                      {
-                        "activity": "Copy to Warehouse via Notebook",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "sourceRowsCopied",
-                      "value": {
-                        "value": "@split(split(activity('Copy to Warehouse via Notebook').output.result.exitValue,';;')[1],'=')[1]",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set sourceRowsCopied NB WH",
-                    "dependsOn": [
-                      {
-                        "activity": "Set copyStatus NB WH",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "ifFalseActivities": [
-                  {
-                    "type": "Copy",
-                    "typeProperties": {
-                      "source": {
-                        "type": "DataWarehouseSource",
-                        "sqlReaderQuery": {
-                          "value": "SELECT * FROM @{pipeline().parameters.sourceschema}.@{pipeline().parameters.sourcetable}",
-                          "type": "Expression"
-                        },
-                        "partitionOption": "None",
-                        "queryTimeout": "02:00:00",
-                        "datasetSettings": {
-                          "type": "DataWarehouseTable",
-                          "schema": [],
-                          "connectionSettings": {
-                            "name": "dw_fabric_demo",
-                            "properties": {
-                              "type": "DataWarehouse",
-                              "typeProperties": {
-                                "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
-                                "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
-                                "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
-                              },
-                              "externalReferences": {
-                                "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
-                              },
-                              "annotations": []
-                            }
-                          },
-                          "annotations": []
-                        }
-                      },
-                      "sink": {
-                        "type": "DataWarehouseSink",
-                        "preCopyScript": "DELETE FROM @{pipeline().parameters.sinkschema}.@{pipeline().parameters.sinktable}",
-                        "allowCopyCommand": true,
-                        "copyCommandSettings": {},
-                        "disableMetricsCollection": false,
-                        "datasetSettings": {
-                          "type": "DataWarehouseTable",
-                          "typeProperties": {
-                            "schema": {
-                              "value": "@pipeline().parameters.sinkschema",
-                              "type": "Expression"
-                            },
-                            "table": {
-                              "value": "@pipeline().parameters.sinktable",
-                              "type": "Expression"
-                            }
-                          },
-                          "schema": [],
-                          "connectionSettings": {
-                            "name": "dw_fabric_demo",
-                            "properties": {
-                              "type": "DataWarehouse",
-                              "typeProperties": {
-                                "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
-                                "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
-                                "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
-                              },
-                              "externalReferences": {
-                                "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
-                              },
-                              "annotations": []
-                            }
-                          },
-                          "annotations": []
-                        }
-                      },
-                      "translator": {
-                        "type": "TabularTranslator",
-                        "typeConversion": true,
-                        "typeConversionSettings": {
-                          "allowDataTruncation": true,
-                          "treatBooleanAsNumber": false
-                        }
-                      },
-                      "enableStaging": true
-                    },
-                    "policy": {
-                      "timeout": "0.12:00:00",
-                      "retry": 2,
-                      "retryIntervalInSeconds": 60,
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Copy data to warehouse",
-                    "dependsOn": []
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "copyStatus",
-                      "value": {
-                        "value": "@activity('Copy data to warehouse').output.executionDetails[0].status",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set copyStatus Copy WH",
-                    "dependsOn": [
-                      {
-                        "activity": "Copy data to warehouse",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "sourceRowsCopied",
-                      "value": {
-                        "value": "@string(activity('Copy data to warehouse').output.rowsCopied)",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set sourceRowsCopied Copy WH",
-                    "dependsOn": [
-                      {
-                        "activity": "Set copyStatus Copy WH",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              "name": "Use Notebook or Copy WH",
-              "dependsOn": []
-            },
-            {
-              "type": "SetVariable",
-              "typeProperties": {
-                "variableName": "pipelineendtime",
-                "value": {
-                  "value": "@utcnow()",
-                  "type": "Expression"
-                }
-              },
-              "policy": {
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Set pipeline endtime",
-              "dependsOn": [
                 {
-                  "activity": "Use Notebook or Copy WH",
-                  "dependencyConditions": [
-                    "Succeeded"
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "Script",
-              "typeProperties": {
-                "scripts": [
-                  {
-                    "text": {
-                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{variables('copyStatus')}',  rowsinserted= @{variables('sourceRowsCopied')}, rowsupdated=0, pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
-                      "type": "Expression"
-                    },
-                    "type": "NonQuery"
-                  }
-                ],
-                "scriptBlockExecutionTimeout": "02:00:00"
-              },
-              "connectionSettings": {
-                "name": "FabricMetadataOrchestration",
-                "properties": {
-                  "type": "FabricSqlDatabase",
+                  "type": "Copy",
                   "typeProperties": {
-                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000"
-                  },
-                  "externalReferences": {
-                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
-                  },
-                  "annotations": []
-                }
-              },
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Update Pipeline Run details",
-              "dependsOn": [
-                {
-                  "activity": "Set pipeline endtime",
-                  "dependencyConditions": [
-                    "Succeeded"
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "Script",
-              "typeProperties": {
-                "scripts": [
-                  {
-                    "text": {
-                      "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Failed', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{utcnow()}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
-                      "type": "Expression"
-                    },
-                    "type": "NonQuery"
-                  }
-                ],
-                "scriptBlockExecutionTimeout": "02:00:00"
-              },
-              "connectionSettings": {
-                "name": "FabricMetadataOrchestration",
-                "properties": {
-                  "type": "FabricSqlDatabase",
-                  "typeProperties": {
-                    "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
-                    "workspaceId": "00000000-0000-0000-0000-000000000000"
-                  },
-                  "externalReferences": {
-                    "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
-                  },
-                  "annotations": []
-                }
-              },
-              "policy": {
-                "timeout": "0.12:00:00",
-                "retry": 0,
-                "retryIntervalInSeconds": 30,
-                "secureInput": false,
-                "secureOutput": false
-              },
-              "name": "Log Full Load Failure",
-              "dependsOn": [
-                {
-                  "activity": "Use Notebook or Copy WH",
-                  "dependencyConditions": [
-                    "Failed"
-                  ]
-                }
-              ]
-            }
-              ]
-            }
-          ],
-          "defaultActivities": [
-            {
-              "type": "IfCondition",
-              "typeProperties": {
-                "expression": {
-                  "value": "@equals(pipeline().parameters.NotebookVsCopydata,1)",
-                  "type": "Expression"
-                },
-                "ifTrueActivities": [
-                  {
-                    "type": "TridentNotebook",
-                    "typeProperties": {
-                      "notebookId": "a8b7c6d5-e4f3-4210-9876-fedcba987654",
-                      "workspaceId": "00000000-0000-0000-0000-000000000000",
-                      "parameters": {
-                        "sinkSchema": {
-                          "value": {
-                            "value": "@pipeline().parameters.sinkschema",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "sinkTable": {
-                          "value": {
-                            "value": "@pipeline().parameters.sinktable",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "startDate": {
-                          "value": {
-                            "value": "@pipeline().parameters.sourcestartdate",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        },
-                        "endDate": {
-                          "value": {
-                            "value": "@pipeline().parameters.sourceenddate",
-                            "type": "Expression"
-                          },
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "policy": {
-                      "timeout": "0.12:00:00",
-                      "retry": 2,
-                      "retryIntervalInSeconds": 60,
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Incr Load via Notebook",
-                    "dependsOn": []
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "incrStatus",
-                      "value": {
-                        "value": "@split(split(activity('Incr Load via Notebook').output.result.exitValue,';;')[0],'=')[1]",
+                    "source": {
+                      "type": "DataWarehouseSource",
+                      "sqlReaderQuery": {
+                        "value": "SELECT * FROM @{pipeline().parameters.sourceschema}.@{pipeline().parameters.sourcetable}",
                         "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set incrStatus NB",
-                    "dependsOn": [
-                      {
-                        "activity": "Incr Load via Notebook",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "incrUpdateCount",
-                      "value": {
-                        "value": "@split(split(activity('Incr Load via Notebook').output.result.exitValue,';;')[1],'=')[1]",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set incrUpdateCount NB",
-                    "dependsOn": [
-                      {
-                        "activity": "Set incrStatus NB",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "incrInsertCount",
-                      "value": {
-                        "value": "@split(split(activity('Incr Load via Notebook').output.result.exitValue,';;')[2],'=')[1]",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set incrInsertCount NB",
-                    "dependsOn": [
-                      {
-                        "activity": "Set incrUpdateCount NB",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "incrMaxDate",
-                      "value": {
-                        "value": "@split(split(activity('Incr Load via Notebook').output.result.exitValue,';;')[3],'=')[1]",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set incrMaxDate NB",
-                    "dependsOn": [
-                      {
-                        "activity": "Set incrInsertCount NB",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  }
-                ],
-                "ifFalseActivities": [
-                  {
-                    "type": "Lookup",
-                    "typeProperties": {
-                      "source": {
-                        "type": "DataWarehouseSource",
-                        "sqlReaderStoredProcedureName": {
-                          "value": "@{pipeline().parameters.storedprocschema}.@{pipeline().parameters.storedprocname}",
-                          "type": "Expression"
-                        },
-                        "storedProcedureParameters": {
-                          "EndDate": {
-                            "type": "Datetime",
-                            "value": {
-                              "value": "@pipeline().parameters.sourceenddate",
-                              "type": "Expression"
-                            }
-                          },
-                          "StartDate": {
-                            "type": "Datetime",
-                            "value": {
-                              "value": "@pipeline().parameters.sourcestartdate",
-                              "type": "Expression"
-                            }
-                          }
-                        },
-                        "partitionOption": "None",
-                        "queryTimeout": "02:00:00"
                       },
+                      "partitionOption": "None",
+                      "queryTimeout": "02:00:00",
                       "datasetSettings": {
                         "type": "DataWarehouseTable",
                         "schema": [],
@@ -582,115 +58,379 @@
                           }
                         },
                         "annotations": []
+                      }
+                    },
+                    "sink": {
+                      "type": "DataWarehouseSink",
+                      "preCopyScript": "DELETE FROM @{pipeline().parameters.sinkschema}.@{pipeline().parameters.sinktable}",
+                      "allowCopyCommand": true,
+                      "copyCommandSettings": {},
+                      "disableMetricsCollection": false,
+                      "datasetSettings": {
+                        "type": "DataWarehouseTable",
+                        "typeProperties": {
+                          "schema": {
+                            "value": "@pipeline().parameters.sinkschema",
+                            "type": "Expression"
+                          },
+                          "table": {
+                            "value": "@pipeline().parameters.sinktable",
+                            "type": "Expression"
+                          }
+                        },
+                        "schema": [],
+                        "connectionSettings": {
+                          "name": "dw_fabric_demo",
+                          "properties": {
+                            "type": "DataWarehouse",
+                            "typeProperties": {
+                              "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
+                              "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
+                              "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
+                            },
+                            "externalReferences": {
+                              "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
+                            },
+                            "annotations": []
+                          }
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "translator": {
+                      "type": "TabularTranslator",
+                      "typeConversion": true,
+                      "typeConversionSettings": {
+                        "allowDataTruncation": true,
+                        "treatBooleanAsNumber": false
+                      }
+                    },
+                    "enableStaging": true
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 2,
+                    "retryIntervalInSeconds": 60,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Copy data to warehouse",
+                  "dependsOn": []
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "copyStatus",
+                    "value": {
+                      "value": "@activity('Copy data to warehouse').output.executionDetails[0].status",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set copyStatus",
+                  "dependsOn": [
+                    {
+                      "activity": "Copy data to warehouse",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "sourceRowsCopied",
+                    "value": {
+                      "value": "@string(activity('Copy data to warehouse').output.rowsCopied)",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set sourceRowsCopied",
+                  "dependsOn": [
+                    {
+                      "activity": "Set copyStatus",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "SetVariable",
+                  "typeProperties": {
+                    "variableName": "pipelineendtime",
+                    "value": {
+                      "value": "@utcnow()",
+                      "type": "Expression"
+                    }
+                  },
+                  "policy": {
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Set pipeline endtime",
+                  "dependsOn": [
+                    {
+                      "activity": "Set sourceRowsCopied",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Script",
+                  "typeProperties": {
+                    "scripts": [
+                      {
+                        "text": {
+                          "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = '@{variables('copyStatus')}',  rowsinserted= @{variables('sourceRowsCopied')}, rowsupdated=0, pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{variables('pipelineendtime')}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
+                          "type": "Expression"
+                        },
+                        "type": "NonQuery"
+                      }
+                    ],
+                    "scriptBlockExecutionTimeout": "02:00:00"
+                  },
+                  "connectionSettings": {
+                    "name": "FabricMetadataOrchestration",
+                    "properties": {
+                      "type": "FabricSqlDatabase",
+                      "typeProperties": {
+                        "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000"
                       },
-                      "firstRowOnly": true
-                    },
-                    "policy": {
-                      "timeout": "0.12:00:00",
-                      "retry": 2,
-                      "retryIntervalInSeconds": 60,
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Load Incremental via Stored Proc",
-                    "dependsOn": []
+                      "externalReferences": {
+                        "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                      },
+                      "annotations": []
+                    }
                   },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "incrStatus",
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Update Pipeline Run details",
+                  "dependsOn": [
+                    {
+                      "activity": "Set pipeline endtime",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Script",
+                  "typeProperties": {
+                    "scripts": [
+                      {
+                        "text": {
+                          "value": "Update dbo.PipelineOrchestrator_FabricWarehouse set batchloaddatetime = '@{pipeline().parameters.batchloaddatetime}', loadstatus = 'Failed', pipelinestarttime='@{variables('pipelinestarttime')}', pipelineendtime = '@{utcnow()}' where sourceschema = '@{pipeline().parameters.sourceschema}' and sourcetable = '@{pipeline().parameters.sourcetable}'",
+                          "type": "Expression"
+                        },
+                        "type": "NonQuery"
+                      }
+                    ],
+                    "scriptBlockExecutionTimeout": "02:00:00"
+                  },
+                  "connectionSettings": {
+                    "name": "FabricMetadataOrchestration",
+                    "properties": {
+                      "type": "FabricSqlDatabase",
+                      "typeProperties": {
+                        "artifactId": "1c92d2e6-59ac-a824-407d-0d49a5bf3425",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000"
+                      },
+                      "externalReferences": {
+                        "connection": "2d9f5d49-fc82-4906-a604-ae06886edfe0"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureInput": false,
+                    "secureOutput": false
+                  },
+                  "name": "Log Full Load Failure",
+                  "dependsOn": [
+                    {
+                      "activity": "Copy data to warehouse",
+                      "dependencyConditions": [
+                        "Failed"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "defaultActivities": [
+            {
+              "type": "Lookup",
+              "typeProperties": {
+                "source": {
+                  "type": "DataWarehouseSource",
+                  "sqlReaderStoredProcedureName": {
+                    "value": "@{pipeline().parameters.storedprocschema}.@{pipeline().parameters.storedprocname}",
+                    "type": "Expression"
+                  },
+                  "storedProcedureParameters": {
+                    "EndDate": {
+                      "type": "Datetime",
                       "value": {
-                        "value": "Succeeded",
+                        "value": "@pipeline().parameters.sourceenddate",
                         "type": "Expression"
                       }
                     },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set incrStatus SP",
-                    "dependsOn": [
-                      {
-                        "activity": "Load Incremental via Stored Proc",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "incrUpdateCount",
+                    "StartDate": {
+                      "type": "Datetime",
                       "value": {
-                        "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.UpdateCount)",
+                        "value": "@pipeline().parameters.sourcestartdate",
                         "type": "Expression"
                       }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set incrUpdateCount SP",
-                    "dependsOn": [
-                      {
-                        "activity": "Set incrStatus SP",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
+                    }
                   },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "incrInsertCount",
-                      "value": {
-                        "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.InsertCount)",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set incrInsertCount SP",
-                    "dependsOn": [
-                      {
-                        "activity": "Set incrUpdateCount SP",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00"
+                },
+                "datasetSettings": {
+                  "type": "DataWarehouseTable",
+                  "schema": [],
+                  "connectionSettings": {
+                    "name": "dw_fabric_demo",
+                    "properties": {
+                      "type": "DataWarehouse",
+                      "typeProperties": {
+                        "artifactId": "2b1e468d-ecd7-4220-80e3-2470e8e98aef",
+                        "endpoint": "lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com",
+                        "workspaceId": "ecfcf483-666f-4267-9456-d09b370c4a12"
+                      },
+                      "externalReferences": {
+                        "connection": "6939a5fc-0a82-49ce-8762-45ab9e739dd5"
+                      },
+                      "annotations": []
+                    }
                   },
-                  {
-                    "type": "SetVariable",
-                    "typeProperties": {
-                      "variableName": "incrMaxDate",
-                      "value": {
-                        "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.MaxDate)",
-                        "type": "Expression"
-                      }
-                    },
-                    "policy": {
-                      "secureInput": false,
-                      "secureOutput": false
-                    },
-                    "name": "Set incrMaxDate SP",
-                    "dependsOn": [
-                      {
-                        "activity": "Set incrInsertCount SP",
-                        "dependencyConditions": [
-                          "Succeeded"
-                        ]
-                      }
-                    ]
-                  }
-                ]
+                  "annotations": []
+                },
+                "firstRowOnly": true
               },
-              "name": "Use Notebook or StoredProc Incr",
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 2,
+                "retryIntervalInSeconds": 60,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Load Incremental via Stored Proc",
               "dependsOn": []
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "incrStatus",
+                "value": {
+                  "value": "Succeeded",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set incrStatus",
+              "dependsOn": [
+                {
+                  "activity": "Load Incremental via Stored Proc",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "incrUpdateCount",
+                "value": {
+                  "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.UpdateCount)",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set incrUpdateCount",
+              "dependsOn": [
+                {
+                  "activity": "Set incrStatus",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "incrInsertCount",
+                "value": {
+                  "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.InsertCount)",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set incrInsertCount",
+              "dependsOn": [
+                {
+                  "activity": "Set incrUpdateCount",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "SetVariable",
+              "typeProperties": {
+                "variableName": "incrMaxDate",
+                "value": {
+                  "value": "@string(activity('Load Incremental via Stored Proc').output.firstRow.MaxDate)",
+                  "type": "Expression"
+                }
+              },
+              "policy": {
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Set incrMaxDate",
+              "dependsOn": [
+                {
+                  "activity": "Set incrInsertCount",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
             },
             {
               "type": "SetVariable",
@@ -708,7 +448,7 @@
               "name": "Set pipeline endtime_incr",
               "dependsOn": [
                 {
-                  "activity": "Use Notebook or StoredProc Incr",
+                  "activity": "Set incrMaxDate",
                   "dependencyConditions": [
                     "Succeeded"
                   ]
@@ -798,7 +538,7 @@
               "name": "Log Incremental Load Failure",
               "dependsOn": [
                 {
-                  "activity": "Use Notebook or StoredProc Incr",
+                  "activity": "Load Incremental via Stored Proc",
                   "dependencyConditions": [
                     "Failed"
                   ]
@@ -848,10 +588,6 @@
       },
       "storedprocname": {
         "type": "string"
-      },
-      "NotebookVsCopydata": {
-        "type": "int",
-        "defaultValue": 1
       }
     },
     "variables": {

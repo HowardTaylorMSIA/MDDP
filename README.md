@@ -89,6 +89,14 @@ The orchestrator pipeline exposes these parameters to control execution:
 - **V-Order optimization**: Delta tables are compacted with V-Order encoding for optimal read performance across Spark, SQL, and Power BI
 - **All cross-references use GUIDs**: Notebook IDs, pipeline IDs, artifact IDs, and connection IDs — folder reorganization never breaks references
 
+### Gold Layer — Notebook Approach Not Viable
+
+A notebook-based approach was tested for the Gold layer (copying data from Silver views into warehouse Gold tables) but was abandoned because it does not work reliably. PySpark notebooks cannot read from warehouse Silver views (cross-database queries are unsupported in Spark), and reading lakehouse SQL analytics endpoint views also proved unreliable. The Gold pipeline therefore uses **Copy Data** for full loads and **warehouse stored procedures** for incremental loads exclusively.
+
+The Silver views (in the `Silver` schema of `dw_fabric_demo`) contain real transformation logic — JOINs across multiple lakehouse tables, column renames, and business logic. These views cannot be deployed via Fabric Git sync (they cause `DmsImportDatabaseException` because cross-database references in `CREATE VIEW` cannot be resolved at deploy time). The view SQL files are kept in the repo under `05 Gold/dw_fabric_demo.Warehouse/Silver/Views/` for reference, but must be **manually created** in the warehouse.
+
+> **Note:** The `NotebookVsCopydata` parameter on the orchestrator pipeline controls the Bronze layer only. It has no effect on the Gold pipeline.
+
 ## Semantic Model (dw_fabric_demo)
 
 The DirectLake semantic model connects to the `dw_fabric_demo` warehouse Gold schema. BPA (Best Practice Analyzer) rules have been applied:
