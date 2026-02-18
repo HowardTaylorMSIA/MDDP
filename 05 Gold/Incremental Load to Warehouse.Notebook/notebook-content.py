@@ -6,13 +6,13 @@
 # # Incremental Load to Warehouse
 # 
 # Replaces the Stored Procedure-based incremental load activity in the Load Warehouse Table pipeline.
-# Reads changed rows from a Silver view in the warehouse and applies a DELETE-matching + INSERT pattern
+# Reads changed rows from a lakehouse Delta table and applies a DELETE-matching + INSERT pattern
 # to a Fabric Warehouse Gold table.
 # 
 # This replicates the logic of the warehouse stored procedures (e.g. `Gold.IncrLoadInvoicedSales`,
 # `Gold.IncrLoadSalesOrders`) but implemented in PySpark / Spark SQL.
 # 
-# **Source view convention:** `dw_fabric_demo.Silver.v{sinkTable}` (e.g. `vInvoicedSales`)
+# **Source convention:** `lh_fabric_demo.{sinkTable}` (e.g. `InvoicedSales`)
 
 # CELL ********************
 
@@ -68,8 +68,8 @@ else:
 
 print(f"Key columns: {key_cols}")
 
-# Source Silver view lives in the warehouse: dw_fabric_demo.Silver.v{sinkTable}
-source_fqn = f"dw_fabric_demo.Silver.v{sinkTable}"
+# Read directly from the lakehouse Delta table (two-part PySpark name)
+source_fqn = f"lh_fabric_demo.{sinkTable}"
 target_fqn = f"dw_fabric_demo.{sinkSchema}.{sinkTable}"
 
 print(f"Source view: {source_fqn}")
@@ -85,13 +85,13 @@ print(f"Date range: {startDate} to {endDate}")
 
 # MARKDOWN ********************
 
-# ## Read Changed Rows from Warehouse Silver View
-# Read rows from the Silver view where `LastUpdated` falls within the specified date range.
-# The view already outputs the correct column names for the Gold table.
+# ## Read Changed Rows from Lakehouse Delta Table
+# Read rows from the lakehouse table where `LastUpdated` falls within the specified date range.
+# The lakehouse table columns already match the Gold table schema.
 
 # CELL ********************
 
-# Read changed rows from the warehouse Silver view
+# Read changed rows from the lakehouse Delta table
 source_df = spark.sql(f"""
     SELECT * FROM {source_fqn}
     WHERE LastUpdated >= '{startDate}' AND LastUpdated <= '{endDate}'

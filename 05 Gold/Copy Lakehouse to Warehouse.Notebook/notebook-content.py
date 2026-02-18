@@ -25,7 +25,7 @@
 # # Copy Lakehouse to Warehouse
 # 
 # Replaces the Copy Data activity in the Load Warehouse Table pipeline.
-# Reads from a Silver view in the warehouse (which references the lakehouse Delta tables)
+# Reads from the lakehouse Delta table directly (two-part PySpark name)
 # and writes to a Fabric Warehouse Gold table.
 # Performs a DELETE + INSERT pattern for full load replacement.
 
@@ -56,17 +56,16 @@ sinkTable = "InvoicedSales"
 
 # MARKDOWN ********************
 
-# ## Read from Warehouse Silver View
-# The Silver views now live in `dw_fabric_demo.Silver` and reference the lakehouse
-# Delta tables with the correct column names/renames for the Gold layer.
-# We simply SELECT * from the view — it already outputs the right schema.
+# ## Read from Lakehouse Delta Table
+# Read directly from the lakehouse Delta table via two-part PySpark name.
+# No Silver view dependency — the lakehouse table columns already match the Gold schema.
 
 # CELL ********************
 
-source_fqn = f"dw_fabric_demo.{sourceSchema}.{sourceTable}"
+source_fqn = f"lh_fabric_demo.{sourceTable}"
 target_fqn = f"dw_fabric_demo.{sinkSchema}.{sinkTable}"
 
-# Read from the Silver view in the warehouse
+# Read from the lakehouse Delta table directly
 df = spark.sql(f"SELECT * FROM {source_fqn}")
 
 # Cache to avoid re-reading during write

@@ -1,7 +1,7 @@
 /*
 ================================================================================
   Procedure : Gold.IncrLoadInvoicedSales
-  Purpose   : Incrementally load InvoicedSales from lakehouse Silver view to
+  Purpose   : Incrementally load InvoicedSales from warehouse Silver view to
               warehouse Gold table using UPDATE-then-INSERT pattern.
   Parameters:
       @StartDate DATETIME - Lower bound for LastUpdated filter (inclusive).
