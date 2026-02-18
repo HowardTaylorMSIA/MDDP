@@ -74,7 +74,7 @@ parquetFolderPath = f"{lakehousePath}/Files/incremental/{tableName}"
 
 # CELL ********************
 
-df2 = spark.read.parquet(parquetFolderPath)
+df2 = spark.read.option("recursiveFileLookup", "true").parquet(parquetFolderPath)
 # display(df2)
 
 # METADATA ********************
