@@ -29,7 +29,7 @@
               "type": "IfCondition",
               "typeProperties": {
                 "expression": {
-                  "value": "@equals(string(pipeline().parameters.NotebookVsCopydata),'1')",
+                  "value": "@equals(pipeline().parameters.NotebookVsCopydata,1)",
                   "type": "Expression"
                 },
                 "ifTrueActivities": [
@@ -385,7 +385,7 @@
               "type": "IfCondition",
               "typeProperties": {
                 "expression": {
-                  "value": "@equals(string(pipeline().parameters.NotebookVsCopydata),'1')",
+                  "value": "@equals(pipeline().parameters.NotebookVsCopydata,1)",
                   "type": "Expression"
                 },
                 "ifTrueActivities": [
@@ -844,8 +844,8 @@
         "type": "string"
       },
       "NotebookVsCopydata": {
-        "type": "string",
-        "defaultValue": "1"
+        "type": "int",
+        "defaultValue": 1
       }
     },
     "variables": {
