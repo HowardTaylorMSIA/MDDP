@@ -78,6 +78,21 @@ table Products
 
 		annotation SummarizationSetBy = Automatic
 
+	hierarchy 'Product Hierarchy'
+		lineageTag: c3d4e5f6-3333-4444-5555-666677778888
+
+		level Supplier
+			lineageTag: c3d4e5f6-3333-4444-5555-666677778881
+			column: SupplierName
+
+		level Brand
+			lineageTag: c3d4e5f6-3333-4444-5555-666677778882
+			column: Brand
+
+		level Product
+			lineageTag: c3d4e5f6-3333-4444-5555-666677778883
+			column: StockItemName
+
 	partition Products = entity
 		mode: directLake
 		source

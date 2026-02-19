@@ -207,6 +207,25 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	hierarchy Geography
+		lineageTag: b2c3d4e5-2222-3333-4444-555566667777
+
+		level Continent
+			lineageTag: b2c3d4e5-2222-3333-4444-555566667771
+			column: Continent
+
+		level Country
+			lineageTag: b2c3d4e5-2222-3333-4444-555566667772
+			column: DeliveryCountry
+
+		level 'State/Province'
+			lineageTag: b2c3d4e5-2222-3333-4444-555566667773
+			column: DeliveryStateProvince
+
+		level City
+			lineageTag: b2c3d4e5-2222-3333-4444-555566667774
+			column: DeliveryCity
+
 	partition Customer = entity
 		mode: directLake
 		source

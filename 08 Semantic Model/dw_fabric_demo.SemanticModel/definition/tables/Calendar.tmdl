@@ -110,6 +110,25 @@ table Calendar
 
 		annotation SummarizationSetBy = Automatic
 
+	hierarchy 'Date Hierarchy'
+		lineageTag: a1b2c3d4-1111-2222-3333-444455556666
+
+		level Year
+			lineageTag: a1b2c3d4-1111-2222-3333-444455556671
+			column: Year
+
+		level Quarter
+			lineageTag: a1b2c3d4-1111-2222-3333-444455556672
+			column: Quarter
+
+		level Month
+			lineageTag: a1b2c3d4-1111-2222-3333-444455556673
+			column: Month
+
+		level Date
+			lineageTag: a1b2c3d4-1111-2222-3333-444455556674
+			column: Date
+
 	partition Calendar = entity
 		mode: directLake
 		source
