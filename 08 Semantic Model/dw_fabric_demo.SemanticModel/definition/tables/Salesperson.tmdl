@@ -3,6 +3,7 @@ table Salesperson
 	lineageTag: 1beb30fa-c09b-4e84-acd3-de8ab3edc3aa
 	sourceLineageTag: [Gold].[Salesperson]
 
+	/// Hidden; primary key for the salesperson, used as relationship key
 	column PersonID
 		dataType: int64
 		isHidden
@@ -15,6 +16,7 @@ table Salesperson
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Full name of the salesperson
 	column FullName
 		dataType: string
 		sourceProviderType: varchar(50)

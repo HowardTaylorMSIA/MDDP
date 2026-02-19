@@ -15,6 +15,7 @@ table SalesOrders
 	measure 'Order Count' = DISTINCTCOUNT(SalesOrders[OrderID])
 		formatString: #,##0
 
+	/// Hidden; primary key for the order, used as relationship key
 	column OrderID
 		dataType: int64
 		isHidden
@@ -27,6 +28,7 @@ table SalesOrders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; primary key for the order line, used as relationship key
 	column OrderLineID
 		dataType: int64
 		isHidden
@@ -39,6 +41,7 @@ table SalesOrders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; foreign key to Customer table, used as relationship key
 	column CustomerID
 		dataType: int64
 		isHidden
@@ -51,6 +54,7 @@ table SalesOrders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; foreign key to Products table, used as relationship key
 	column StockItemID
 		dataType: int64
 		isHidden
@@ -63,6 +67,7 @@ table SalesOrders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; foreign key to Salesperson table, used as relationship key
 	column SalespersonPersonID
 		dataType: int64
 		isHidden
@@ -75,6 +80,7 @@ table SalesOrders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Date the order was placed
 	column OrderDate
 		dataType: dateTime
 		formatString: General Date
@@ -86,6 +92,7 @@ table SalesOrders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Number of units ordered on this order line
 	column Quantity
 		dataType: int64
 		formatString: 0
@@ -97,6 +104,7 @@ table SalesOrders
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Total price for this order line (unit price × quantity)
 	column ExtendedPrice
 		dataType: double
 		sourceProviderType: decimal(18, 2)
@@ -109,6 +117,7 @@ table SalesOrders
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	/// Timestamp of the last update to this record
 	column LastUpdated
 		dataType: dateTime
 		formatString: General Date

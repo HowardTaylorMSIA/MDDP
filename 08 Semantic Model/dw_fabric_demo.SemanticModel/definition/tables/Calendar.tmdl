@@ -4,6 +4,7 @@ table Calendar
 	sourceLineageTag: [Gold].[Calendar]
 	dataCategory: Time
 
+	/// Calendar date value used for time-based filtering and analysis
 	column Date
 		dataType: dateTime
 		formatString: General Date
@@ -15,6 +16,7 @@ table Calendar
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Day number within the month (1–31)
 	column DayNum
 		dataType: int64
 		formatString: 0
@@ -38,6 +40,7 @@ table Calendar
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; numeric sort order for DayOfWeek (1=Sunday through 7=Saturday)
 	column DayOfWeekNum
 		dataType: int64
 		isHidden
@@ -50,6 +53,7 @@ table Calendar
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Month name (e.g. January). Sorted by MonthNum
 	column Month
 		dataType: string
 		sourceProviderType: varchar(20)
@@ -62,6 +66,7 @@ table Calendar
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; numeric sort order for Month (1=January through 12=December)
 	column MonthNum
 		dataType: int64
 		isHidden
@@ -74,6 +79,7 @@ table Calendar
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; numeric sort order for Quarter (1–4)
 	column QuarterNum
 		dataType: int64
 		isHidden
@@ -86,6 +92,7 @@ table Calendar
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Calendar quarter label (e.g. Q1). Sorted by QuarterNum
 	column Quarter
 		dataType: string
 		sourceProviderType: varchar(2)
@@ -98,6 +105,7 @@ table Calendar
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Calendar year (e.g. 2024)
 	column Year
 		dataType: int64
 		formatString: 0

@@ -3,6 +3,7 @@ table Customer
 	lineageTag: 104438d8-8c1f-4fcf-861a-be2f13d868bc
 	sourceLineageTag: [Gold].[Customer]
 
+	/// Number of years the customer has been active
 	column YearsCustomer
 		dataType: int64
 		formatString: 0
@@ -14,6 +15,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; foreign key to buying group, used as relationship key
 	column BuyingGroupID
 		dataType: int64
 		isHidden
@@ -26,6 +28,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Name of the buying group the customer belongs to
 	column BuyingGroupName
 		dataType: string
 		sourceProviderType: varchar(50)
@@ -36,6 +39,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Maximum credit amount allowed for this customer
 	column CreditLimit
 		dataType: decimal
 		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
@@ -49,6 +53,7 @@ table Customer
 
 		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
 
+	/// Hidden; foreign key to customer category, used as relationship key
 	column CustomerCategoryID
 		dataType: int64
 		isHidden
@@ -61,6 +66,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; primary key for the customer, used as relationship key
 	column CustomerID
 		dataType: int64
 		isHidden
@@ -73,6 +79,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Business name of the customer
 	column CustomerName
 		dataType: string
 		sourceProviderType: varchar(100)
@@ -83,6 +90,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; foreign key to delivery city, used as relationship key
 	column DeliveryCityID
 		dataType: int64
 		isHidden
@@ -95,6 +103,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Delivery city name
 	column DeliveryCity
 		dataType: string
 		sourceProviderType: varchar(50)
@@ -105,6 +114,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// State or province for the delivery address
 	column DeliveryStateProvince
 		dataType: string
 		sourceProviderType: varchar(50)
@@ -115,6 +125,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Country for the delivery address
 	column DeliveryCountry
 		dataType: string
 		sourceProviderType: varchar(60)
@@ -125,6 +136,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Geographic region (e.g. Americas, Asia)
 	column Region
 		dataType: string
 		sourceProviderType: varchar(30)
@@ -135,6 +147,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Geographic subregion (e.g. Northern America, Southeast Asia)
 	column Subregion
 		dataType: string
 		sourceProviderType: varchar(30)
@@ -145,6 +158,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Continent name used in the Geography hierarchy
 	column Continent
 		dataType: string
 		sourceProviderType: varchar(30)
@@ -155,6 +169,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Assigned sales territory for the customer
 	column SalesTerritory
 		dataType: string
 		sourceProviderType: varchar(50)
@@ -165,6 +180,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Postal or ZIP code for the delivery address
 	column DeliveryPostalCode
 		dataType: string
 		sourceProviderType: varchar(10)
@@ -175,6 +191,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Whether the customer is currently on credit hold
 	column IsOnCreditHold
 		dataType: boolean
 		formatString: """TRUE"";""TRUE"";""FALSE"""
@@ -186,6 +203,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Standard payment terms in days
 	column PaymentDays
 		dataType: int64
 		formatString: 0
@@ -197,6 +215,7 @@ table Customer
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Telephone area code for the customer
 	column AreaCode
 		dataType: string
 		sourceProviderType: varchar(3)

@@ -31,6 +31,7 @@ table InvoicedSales
 	measure 'Average Revenue per Invoice' = DIVIDE([Total Revenue], [Invoice Count], 0)
 		formatString: $#,##0.00
 
+	/// Hidden; primary key for the invoice, used as relationship key
 	column InvoiceID
 		dataType: int64
 		isHidden
@@ -43,6 +44,7 @@ table InvoicedSales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; primary key for the invoice line, used as relationship key
 	column InvoiceLineID
 		dataType: int64
 		isHidden
@@ -55,6 +57,7 @@ table InvoicedSales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; foreign key to Customer table, used as relationship key
 	column CustomerID
 		dataType: int64
 		isHidden
@@ -67,6 +70,7 @@ table InvoicedSales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; foreign key to Products table, used as relationship key
 	column StockItemID
 		dataType: int64
 		isHidden
@@ -79,6 +83,7 @@ table InvoicedSales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Hidden; foreign key to Salesperson table, used as relationship key
 	column SalespersonPersonID
 		dataType: int64
 		isHidden
@@ -91,6 +96,7 @@ table InvoicedSales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Date the invoice was issued
 	column InvoiceDate
 		dataType: dateTime
 		formatString: General Date
@@ -102,6 +108,7 @@ table InvoicedSales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Timestamp of the last update to this record
 	column LastUpdated
 		dataType: dateTime
 		formatString: General Date
@@ -113,6 +120,7 @@ table InvoicedSales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Number of units sold on this invoice line
 	column Quantity
 		dataType: int64
 		formatString: 0
@@ -124,6 +132,7 @@ table InvoicedSales
 
 		annotation SummarizationSetBy = Automatic
 
+	/// Total price for this invoice line (unit price × quantity)
 	column ExtendedPrice
 		dataType: double
 		sourceProviderType: decimal(18, 2)
@@ -136,6 +145,7 @@ table InvoicedSales
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	/// Gross profit for this invoice line (revenue minus cost)
 	column GrossProfit
 		dataType: double
 		sourceProviderType: decimal(18, 2)
@@ -148,6 +158,7 @@ table InvoicedSales
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	/// Tax amount charged on this invoice line
 	column TaxAmount
 		dataType: double
 		sourceProviderType: decimal(18, 2)
