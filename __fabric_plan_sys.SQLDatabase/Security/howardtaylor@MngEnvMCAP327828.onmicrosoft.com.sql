@@ -1,0 +1,6 @@
+CREATE USER [howardtaylor@MngEnvMCAP327828.onmicrosoft.com]
+    WITH SID = 0x5BAD27C1BDE9D14FA70BCDEA1D0D7EF9, TYPE = E;
+
+
+GO
+

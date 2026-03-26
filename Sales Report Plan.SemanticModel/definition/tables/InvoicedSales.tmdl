@@ -1,0 +1,120 @@
+table InvoicedSales
+	lineageTag: 182585d1-8ce8-45aa-add4-1831edca71fc
+
+	column InvoiceID
+		dataType: int64
+		formatString: 0
+		lineageTag: ac1a8d58-f8ca-4942-b03b-77faa6c2ee31
+		summarizeBy: count
+		sourceColumn: InvoiceID
+
+		annotation SummarizationSetBy = Automatic
+
+	column InvoiceLineID
+		dataType: int64
+		formatString: 0
+		lineageTag: c2a62572-6957-4013-aca2-1d363f5e1a3f
+		summarizeBy: count
+		sourceColumn: InvoiceLineID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		lineageTag: 2b46053e-90c3-4922-a2c1-eed1ce9bafcd
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		lineageTag: b4bde4ef-e092-4b52-b602-f686055683d8
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalespersonPersonID
+		dataType: int64
+		formatString: 0
+		lineageTag: d7dc9191-e1ca-4ff7-a015-118accfeed4f
+		summarizeBy: none
+		sourceColumn: SalespersonPersonID
+
+		annotation SummarizationSetBy = Automatic
+
+	column InvoiceDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 933d273c-b2b9-4fef-9188-60e4286848df
+		summarizeBy: none
+		sourceColumn: InvoiceDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column LastUpdated
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8ce4a481-a342-42ec-8ebb-aa96ccf97441
+		summarizeBy: none
+		sourceColumn: LastUpdated
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 446d9491-c5f2-49be-8c42-39beb2c7359d
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExtendedPrice
+		dataType: double
+		lineageTag: ca49f50e-3cb2-42a8-b38b-60a7f6e7dd1e
+		summarizeBy: sum
+		sourceColumn: ExtendedPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GrossProfit
+		dataType: double
+		lineageTag: 87c2a41f-bc44-44a7-a16f-16d4fe9468e3
+		summarizeBy: sum
+		sourceColumn: GrossProfit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TaxAmount
+		dataType: double
+		lineageTag: 3e1b61e3-a8da-43ad-bf4a-776c367e1f39
+		summarizeBy: sum
+		sourceColumn: TaxAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition InvoicedSales = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com", "dw_fabric_demo"),
+				    Gold_InvoicedSales = Source{[Schema="Gold",Item="InvoicedSales"]}[Data]
+				in
+				    Gold_InvoicedSales
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

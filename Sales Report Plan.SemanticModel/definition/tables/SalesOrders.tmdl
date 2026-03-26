@@ -1,0 +1,100 @@
+table SalesOrders
+	lineageTag: 859cea2a-063d-4c79-b892-2947aeb2beb7
+
+	column OrderID
+		dataType: int64
+		formatString: 0
+		lineageTag: 705bf575-1340-4e63-9bd4-9d48f37d06f4
+		summarizeBy: count
+		sourceColumn: OrderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderLineID
+		dataType: int64
+		formatString: 0
+		lineageTag: cfcfb86f-c6bc-445e-bd7e-a45952d4402c
+		summarizeBy: count
+		sourceColumn: OrderLineID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: int64
+		formatString: 0
+		lineageTag: e76173ed-838e-459d-99d8-1cdff9e2bf18
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		lineageTag: 6170180c-2c47-4b46-a60b-1f244800063d
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalespersonPersonID
+		dataType: int64
+		formatString: 0
+		lineageTag: 404109da-bd48-4be9-bf1c-57bd709efcf0
+		summarizeBy: none
+		sourceColumn: SalespersonPersonID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: e19dde45-b46d-4567-93b8-2e1247e52d96
+		summarizeBy: none
+		sourceColumn: OrderDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: ff603f6c-5acf-4d71-8f5b-2f4b0db8b602
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column ExtendedPrice
+		dataType: double
+		lineageTag: 88ff38b6-5210-4694-afd0-4c6e38d36ad2
+		summarizeBy: sum
+		sourceColumn: ExtendedPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LastUpdated
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 34dd8b54-7cb0-4411-8582-d6eaddac87bb
+		summarizeBy: none
+		sourceColumn: LastUpdated
+
+		annotation SummarizationSetBy = Automatic
+
+	partition SalesOrders = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com", "dw_fabric_demo"),
+				    Gold_SalesOrders = Source{[Schema="Gold",Item="SalesOrders"]}[Data]
+				in
+				    Gold_SalesOrders
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+
