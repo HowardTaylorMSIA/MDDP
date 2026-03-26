@@ -1,0 +1,75 @@
+table Products
+	lineageTag: 795fc38b-7ee7-4c04-a532-265e4c35f840
+
+	column StockItemID
+		dataType: int64
+		formatString: 0
+		lineageTag: e078ffca-5b10-4b62-becb-c953f6266ab0
+		summarizeBy: none
+		sourceColumn: StockItemID
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockItemName
+		dataType: string
+		lineageTag: 11e5ba6e-4282-4622-9ea8-0f9c479b44d1
+		summarizeBy: none
+		sourceColumn: StockItemName
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierID
+		dataType: int64
+		formatString: 0
+		lineageTag: ba5eb149-fb27-4505-9b49-dc02394f0690
+		summarizeBy: count
+		sourceColumn: SupplierID
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierName
+		dataType: string
+		lineageTag: dc21ad9e-c977-4fb5-adc0-697985c1d16f
+		summarizeBy: none
+		sourceColumn: SupplierName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		lineageTag: eb3bf286-3b61-42aa-823e-043655f8bfce
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column ColorName
+		dataType: string
+		lineageTag: 1b57e4bf-ef6a-44d4-a258-1a765155cabc
+		summarizeBy: none
+		sourceColumn: ColorName
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimeDays
+		dataType: int64
+		formatString: 0
+		lineageTag: 48dbc3b8-e5fc-40a8-87ee-705afe3f9b51
+		summarizeBy: sum
+		sourceColumn: LeadTimeDays
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Products = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com", "dw_fabric_demo"),
+				    Gold_Products = Source{[Schema="Gold",Item="Products"]}[Data]
+				in
+				    Gold_Products
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

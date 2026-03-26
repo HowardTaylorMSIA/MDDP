@@ -1,0 +1,32 @@
+relationship AutoDetected_9866049d-36df-45ff-9801-4b9c568ddf55
+	fromColumn: InvoicedSales.CustomerID
+	toColumn: Customer.CustomerID
+
+relationship AutoDetected_2786964b-3548-4fc8-9e8b-9d479f9c3f02
+	fromColumn: SalesOrders.CustomerID
+	toColumn: Customer.CustomerID
+
+relationship AutoDetected_c6c3074d-6e3f-4ed0-9781-48265b8dd737
+	fromColumn: InvoicedSales.StockItemID
+	toColumn: Products.StockItemID
+
+relationship AutoDetected_388d4f5a-13c0-4325-9888-7a6cc30e3574
+	fromColumn: SalesOrders.StockItemID
+	toColumn: Products.StockItemID
+
+relationship 2d6b26bc-2f94-ec42-1d19-182c9a0f4eb6
+	fromColumn: SalesOrders.OrderDate
+	toColumn: Calendar.Date
+
+relationship 759ead79-6892-4643-0234-7902f48ee903
+	fromColumn: InvoicedSales.InvoiceDate
+	toColumn: Calendar.Date
+
+relationship 3113031f-c8f5-7a08-4d27-10c6c9fcf334
+	fromColumn: InvoicedSales.SalespersonPersonID
+	toColumn: Salesperson.PersonID
+
+relationship 3d6be308-a38f-1ad9-8d52-375475b0e8ae
+	fromColumn: SalesOrders.SalespersonPersonID
+	toColumn: Salesperson.PersonID
+

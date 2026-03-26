@@ -1,0 +1,96 @@
+table Calendar
+	lineageTag: f12a1a90-20f9-4520-a260-1145d37ec737
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6456540a-4e26-4bb6-ac64-a165b5f3dc95
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column DayNum
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f240001-264a-4a6f-af4e-7a93e8c22ea1
+		summarizeBy: sum
+		sourceColumn: DayNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeek
+		dataType: string
+		lineageTag: 4983fad3-ef49-40ab-9c75-9f162a293770
+		summarizeBy: none
+		sourceColumn: DayOfWeek
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeekNum
+		dataType: int64
+		formatString: 0
+		lineageTag: a7118e04-3466-43d1-8c4e-3cecc4f34fca
+		summarizeBy: sum
+		sourceColumn: DayOfWeekNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Month
+		dataType: string
+		lineageTag: 564f24f8-033c-4d98-bd0d-b6b02090e47f
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNum
+		dataType: int64
+		formatString: 0
+		lineageTag: c9770847-0724-44bb-9408-63bdd452f52a
+		summarizeBy: sum
+		sourceColumn: MonthNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column QuarterNum
+		dataType: int64
+		formatString: 0
+		lineageTag: a0724a8f-fb1a-4cf9-a5d8-745b72a8fc80
+		summarizeBy: sum
+		sourceColumn: QuarterNum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: c58117b8-2c15-4daa-ad55-fc91b32aca36
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: e99f3f41-c711-456f-8e74-015aabeb1298
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Calendar = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com", "dw_fabric_demo"),
+				    Gold_Calendar = Source{[Schema="Gold",Item="Calendar"]}[Data]
+				in
+				    Gold_Calendar
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

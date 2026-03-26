@@ -1,0 +1,33 @@
+table Salesperson
+	lineageTag: 41b9eb8e-23fc-4692-b0db-e10f871a8b37
+
+	column PersonID
+		dataType: int64
+		formatString: 0
+		lineageTag: 304aebac-d5c3-4c61-9b82-9da9b850ccab
+		summarizeBy: none
+		sourceColumn: PersonID
+
+		annotation SummarizationSetBy = Automatic
+
+	column FullName
+		dataType: string
+		lineageTag: de0b4899-97bb-43d9-a9bb-5fd2581e3ae2
+		summarizeBy: none
+		sourceColumn: FullName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Salesperson = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("lzfef3tjfqouzjantosdf7hmva-qp2pz3dpmztuffcw2cntodckci.datawarehouse.fabric.microsoft.com", "dw_fabric_demo"),
+				    Gold_Salesperson = Source{[Schema="Gold",Item="Salesperson"]}[Data]
+				in
+				    Gold_Salesperson
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+
